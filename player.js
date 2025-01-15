@@ -1,4 +1,4 @@
-import {IdleRight, IdleLeft, RunningRight, RunningLeft, Jumping} from "./playerStates.js";
+import {IdleRight, IdleLeft, RunningRight, RunningLeft, JumpingRight, JumpingLeft, DeathRight, DeathLeft} from "./playerStates.js";
 
 export class Player {
     constructor(game) {
@@ -8,23 +8,28 @@ export class Player {
         this.playerWidthOffset = 382;
         this.playerHeightOffset = 130;
         this.playerHeightOffsetB = 40;
-        this.x = 450;
+        this.x = -200;
         this.y = 100;
         this.idleRight = idleRight;
         this.idleLeft = idleLeft;
         this.runningRight = runningRight;
         this.runningLeft = runningLeft
+        this.jumpingRight = jumpingRight;
+        this.jumpingLeft = jumpingLeft;
+        this.deathRight = deathRight;
+        this.deathLeft = deathLeft;
         this.frameX = 0;
         this.maxFrameX = 11;
         this.fps = 20;
         this.frameTimer = 0;
         this.frameInterval = 1000/ this.fps;
-        this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new Jumping(this.game)];
+        this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game)];
         this.currentState = null;
-        this.speed = 1;
+        this.speed = 1.3;
     }
     update(input, deltaTime) {
         this.currentState.input(input);
+        this.frameInterval = 1000/ this.fps;
 
         if (input.includes('s')) this.y += this.speed;
         if (input.includes('w')) this.y -= this.speed;
@@ -54,4 +59,5 @@ export class Player {
         this.currentState = this.states[state];
         this.currentState.enter();
     }
+   
 }

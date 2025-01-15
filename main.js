@@ -1,5 +1,6 @@
 import { Input } from './input.js';
 import { Player } from './player.js';
+import { Background } from './background.js';
 
 window.addEventListener('load', function(){
     const canvas = document.getElementById('canvas1');
@@ -13,14 +14,16 @@ window.addEventListener('load', function(){
             this.height = height;
             this.player = new Player(this); 
             this.input = new Input(this);
+            this.background = new Background(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
+            this.gameOver = false;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime);
         }
         draw(ctx, state) {
-            ctx.drawImage(grass, 0, 0, 1500, 800);
+            this.background.draw(ctx);
             this.player.draw(ctx, state);
         }
     }
@@ -34,7 +37,7 @@ window.addEventListener('load', function(){
         lastTime = timeStamp;
         game.update(deltaTime);
         game.draw(ctx, game.player.currentState);
-        requestAnimationFrame(animate);
+        if (!game.gameOver) requestAnimationFrame(animate);
     }
     animate(0);
 });
