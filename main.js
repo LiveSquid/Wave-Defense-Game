@@ -20,11 +20,19 @@ window.addEventListener('load', function(){
             this.gameOver = false;
         }
         update(deltaTime) {
-            this.player.update(this.input.keys, deltaTime);
+            this.player.update(this.input.keys, deltaTime, this.input.clicks);
         }
         draw(ctx, state) {
             this.background.draw(ctx);
             this.player.draw(ctx, state);
+        }
+        rotation(a, b) {
+            const dx = a.x - b.x;
+            const dy = a.y - b.y;
+            const distance = Math.hypot(dx, dy);
+            const rotateX = dx / distance;
+            const rotateY = dy / distance;
+            return [ rotateX, rotateY, dx, dy];
         }
     }
 

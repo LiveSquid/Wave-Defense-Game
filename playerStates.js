@@ -7,6 +7,8 @@ export const states = {
     jumpingLeft: 5,
     deathRight: 6,
     deathLeft: 7,
+    attackRight: 8,
+    attackLeft: 9,
 };
 
 class State  {
@@ -23,13 +25,15 @@ export class IdleRight extends State {
     enter() {
         this.game.player.frameX = 0;
         this.game.player.maxFrameX = 11;
+        this.game.player.speed = 1.5;
     }
-    input(input) {
-        if (input.includes('d')) this.game.player.setState(states.runningRight);
-        else if (input.includes('a')) this.game.player.setState(states.runningLeft);
-        else if (input.includes('w')) this.game.player.setState(states.runningRight);
-        else if (input.includes('s')) this.game.player.setState(states.runningRight);
-        else if (input.includes('Shift')) this.game.player.setState(states.deathRight);
+    input(inputK, inputM) {
+        if (inputK.includes('d')) this.game.player.setState(states.runningRight);
+        else if (inputK.includes('a')) this.game.player.setState(states.runningLeft);
+        else if (inputK.includes('w')) this.game.player.setState(states.runningRight);
+        else if (inputK.includes('s')) this.game.player.setState(states.runningRight);
+        else if (inputK.includes('Shift')) this.game.player.setState(states.deathRight);
+        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
     }
 }
 
@@ -41,13 +45,15 @@ export class IdleLeft extends State {
         this.game.player.frameX = 11;
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 11;
+        this.game.player.speed = 1.5;
     }
-    input(input) {
-        if (input.includes('a')) this.game.player.setState(states.runningLeft);
-        if (input.includes('d')) this.game.player.setState(states.runningRight);
-        else if (input.includes('s')) this.game.player.setState(states.runningLeft);
-        else if (input.includes('w')) this.game.player.setState(states.runningLeft);
-        else if (input.includes('Shift')) this.game.player.setState(states.deathLeft);
+    input(inputK, inputM) {
+        if (inputK.includes('a')) this.game.player.setState(states.runningLeft);
+        if (inputK.includes('d')) this.game.player.setState(states.runningRight);
+        else if (inputK.includes('s')) this.game.player.setState(states.runningLeft);
+        else if (inputK.includes('w')) this.game.player.setState(states.runningLeft);
+        else if (inputK.includes('Shift')) this.game.player.setState(states.deathLeft);
+        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
     }
 }
 
@@ -59,10 +65,11 @@ export class RunningRight extends State {
         this.game.player.frameX = 0;
         this.game.player.maxFrameX = 11;
     }
-    input(input) {
-        if (!input.includes('d') && !input.includes('w') && !input.includes('s')) this.game.player.setState(states.idleRight);
-        if (input.includes('a')) this.game.player.setState(states.runningLeft);
-        else if (input.includes(' ')) this.game.player.setState(states.jumpingRight);
+    input(inputK, inputM) {
+        if (!inputK.includes('d') && !inputK.includes('w') && !inputK.includes('s')) this.game.player.setState(states.idleRight);
+        if (inputK.includes('a')) this.game.player.setState(states.runningLeft);
+        else if (inputK.includes(' ')) this.game.player.setState(states.jumpingRight);
+        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
     }
 }
 
@@ -75,10 +82,11 @@ export class RunningLeft extends State {
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 11;
     }
-    input(input) {
-        if (!input.includes('a') && !input.includes('w') && !input.includes('s')) this.game.player.setState(states.idleLeft);
-        if (input.includes('d')) this.game.player.setState(states.runningRight);
-        else if (input.includes(' ')) this.game.player.setState(states.jumpingLeft);
+    input(inputK, inputM) {
+        if (!inputK.includes('a') && !inputK.includes('w') && !inputK.includes('s')) this.game.player.setState(states.idleLeft);
+        if (inputK.includes('d')) this.game.player.setState(states.runningRight);
+        else if (inputK.includes(' ')) this.game.player.setState(states.jumpingLeft);
+        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
     }
 }
 
@@ -90,8 +98,9 @@ export class JumpingRight extends State {
         this.game.player.frameX = 0;
         this.game.player.maxFrameX = 11;
     }
-    input(input) {
+    input(inputK, inputM) {
         if (this.game.player.frameX === 11) this.game.player.setState(states.idleRight);
+        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
     }
 }
 
@@ -104,8 +113,9 @@ export class JumpingLeft extends State {
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 11;
     }
-    input(input) {
+    input(inputK, inputM) {
         if (this.game.player.frameX === 0) this.game.player.setState(states.idleLeft);
+        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
     }
 }
 
@@ -119,7 +129,7 @@ export class DeathRight extends State {
         this.game.player.maxFrameX = 17;
         
     }
-    input(input) {
+    input(inputK) {
         if (this.game.player.frameX === 17) this.game.gameOver = true;
     }
 }
@@ -134,7 +144,40 @@ export class DeathLeft extends State {
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 17;
     }
-    input(input) {
+    input(inputK) {
         if (this.game.player.frameX === 0) this.game.gameOver = true;
+    }
+}
+
+export class AttackRight extends State {
+    constructor(game) {
+        super('attackRight', game);
+    }
+    enter() {
+        this.game.player.fps = 20;
+        this.game.player.frameX = 0;
+        this.game.player.maxFrameX = 7;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleRight);
+    }
+}
+
+export class AttackLeft extends State {
+    constructor(game) {
+        super('attackLeft', game);
+    }
+    enter() {
+        this.game.player.fps = 20;
+        this.game.player.frameX = 7;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 7;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleLeft);
     }
 }
