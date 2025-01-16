@@ -38,8 +38,9 @@ export class IdleLeft extends State {
         super('idleLeft', game);
     }
     enter() {
-        this.game.player.frameX = 0;
-        this.game.player.maxFrameX = 11;
+        this.game.player.frameX = 11;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 11;
     }
     input(input) {
         if (input.includes('a')) this.game.player.setState(states.runningLeft);
@@ -70,8 +71,9 @@ export class RunningLeft extends State {
         super('runningLeft', game);
     }
     enter() {
-        this.game.player.frameX = 0;
-        this.game.player.maxFrameX = 11;
+        this.game.player.frameX = 11;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 11;
     }
     input(input) {
         if (!input.includes('a') && !input.includes('w') && !input.includes('s')) this.game.player.setState(states.idleLeft);
@@ -98,11 +100,12 @@ export class JumpingLeft extends State {
         super('jumpingLeft', game);
     }
     enter() {
-        this.game.player.frameX = 0;
-        this.game.player.maxFrameX = 11;
+        this.game.player.frameX = 11;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 11;
     }
     input(input) {
-        if (this.game.player.frameX === 11) this.game.player.setState(states.idleLeft);
+        if (this.game.player.frameX === 0) this.game.player.setState(states.idleLeft);
     }
 }
 
@@ -117,7 +120,7 @@ export class DeathRight extends State {
         
     }
     input(input) {
-        if (this.game.player.frameX >= 17) this.game.gameOver = true;
+        if (this.game.player.frameX === 17) this.game.gameOver = true;
     }
 }
 
@@ -127,10 +130,11 @@ export class DeathLeft extends State {
     }
     enter() {
         this.game.player.fps = 7;
-        this.game.player.frameX = 0;
-        this.game.player.maxFrameX = 17;
+        this.game.player.frameX = 17;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 17;
     }
     input(input) {
-        if (this.game.player.frameX === 17) this.game.gameOver = true;
+        if (this.game.player.frameX === 0) this.game.gameOver = true;
     }
 }

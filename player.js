@@ -20,12 +20,13 @@ export class Player {
         this.deathLeft = deathLeft;
         this.frameX = 0;
         this.maxFrameX = 11;
+        this.maxFrameL = 11;
         this.fps = 20;
         this.frameTimer = 0;
         this.frameInterval = 1000/ this.fps;
         this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game)];
         this.currentState = null;
-        this.speed = 1.3;
+        this.speed = 1.5;
     }
     update(input, deltaTime) {
         this.currentState.input(input);
@@ -36,14 +37,28 @@ export class Player {
         if (input.includes('d')) this.x += this.speed;
         if (input.includes('a')) this.x -= this.speed;
 
-        if (this.frameTimer > this.frameInterval) {
-            if (this.frameX < this.maxFrameX) this.frameX ++
-            else this.frameX = 0
-            this.frameTimer = 0;    
+        if (this.currentState.state.includes('Left')) { 
+            if (this.frameTimer > this.frameInterval) {
+                if (this.frameX > this.maxFrameX) this.frameX --;
+                else this.frameX = this.maxFrameL;
+                this.frameTimer = 0;    
+            }
+            else {
+                this.frameTimer += (deltaTime);
+            }
         }
-        else {
-            this.frameTimer += (deltaTime);
+
+        if (this.currentState.state.includes('Right')) {
+            if (this.frameTimer > this.frameInterval) {
+                if (this.frameX < this.maxFrameX) this.frameX ++;
+                else this.frameX = 0
+                this.frameTimer = 0;    
+            }
+            else {
+                this.frameTimer += (deltaTime);
+            }
         }
+        
 
         if ((this.x + this.playerWidthOffset) < 0) this.x = -this.playerWidthOffset;
         if (this.x > this.game.width - this.width + this.playerWidthOffset) this.x = this.game.width - this.width + this.playerWidthOffset;
