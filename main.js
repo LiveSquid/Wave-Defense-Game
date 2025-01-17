@@ -20,16 +20,18 @@ window.addEventListener('load', function(){
             this.taurus = new Taurus(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
+            this.taurus.currentState = this.taurus.states[0];
+            this.taurus.currentState.enter();
             this.gameOver = false;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
             this.taurus.update(deltaTime);
         }
-        draw(ctx, state) {
+        draw(ctx, state, stateT) {
             this.background.draw(ctx);
             this.player.draw(ctx, state);
-            this.taurus.draw(ctx);
+            this.taurus.draw(ctx, stateT);
         }
         rotation(a, b, w, h) {
             const dx = (a.x + w.width/2) - (b.x + (this.player.width/2));                
@@ -49,10 +51,10 @@ window.addEventListener('load', function(){
         const deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
         game.update(deltaTime);
-        game.draw(ctx, game.player.currentState);
+        game.draw(ctx, game.player.currentState, game.taurus.currentState);
         if (!game.gameOver) requestAnimationFrame(animate);
     }
     animate(0);
-}
+});
 
 //
