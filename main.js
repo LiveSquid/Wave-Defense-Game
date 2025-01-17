@@ -1,6 +1,7 @@
 import { Input } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
+import { Taurus } from './enemies.js';
 
 window.addEventListener('load', function(){
     const canvas = document.getElementById('canvas1');
@@ -10,29 +11,33 @@ window.addEventListener('load', function(){
 
     class Game {
         constructor(width, height) {
+            this.canvas = canvas;
             this.width = width;
             this.height = height;
             this.player = new Player(this); 
             this.input = new Input(this);
             this.background = new Background(this);
+            this.taurus = new Taurus(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
             this.gameOver = false;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
+            this.taurus.update(deltaTime);
         }
         draw(ctx, state) {
             this.background.draw(ctx);
             this.player.draw(ctx, state);
+            this.taurus.draw(ctx);
         }
-        rotation(a, b) {
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
+        rotation(a, b, w, h) {
+            const dx = (a.x + w.width/2) - (b.x + (this.player.width/2));                
+            const dy = (a.y + h.height/2) - (b.y + (this.player.height/2));
             const distance = Math.hypot(dx, dy);
             const rotateX = dx / distance;
             const rotateY = dy / distance;
-            return [ rotateX, rotateY, dx, dy];
+            return [rotateX, rotateY, dx, dy];
         }
     }
 
@@ -48,6 +53,6 @@ window.addEventListener('load', function(){
         if (!game.gameOver) requestAnimationFrame(animate);
     }
     animate(0);
-});
+}
 
 //

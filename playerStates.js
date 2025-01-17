@@ -9,7 +9,7 @@ export const states = {
     deathLeft: 7,
     attackRight: 8,
     attackLeft: 9,
-};
+}
 
 class State  {
     constructor(state, game) {
@@ -26,6 +26,7 @@ export class IdleRight extends State {
         this.game.player.frameX = 0;
         this.game.player.maxFrameX = 11;
         this.game.player.speed = 1.5;
+        this.game.player.setAngle = false;
     }
     input(inputK, inputM) {
         if (inputK.includes('d')) this.game.player.setState(states.runningRight);
@@ -33,7 +34,7 @@ export class IdleRight extends State {
         else if (inputK.includes('w')) this.game.player.setState(states.runningRight);
         else if (inputK.includes('s')) this.game.player.setState(states.runningRight);
         else if (inputK.includes('Shift')) this.game.player.setState(states.deathRight);
-        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
+        // if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
     }
 }
 
@@ -46,6 +47,7 @@ export class IdleLeft extends State {
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 11;
         this.game.player.speed = 1.5;
+        this.game.player.setAngle = false;
     }
     input(inputK, inputM) {
         if (inputK.includes('a')) this.game.player.setState(states.runningLeft);
@@ -53,7 +55,7 @@ export class IdleLeft extends State {
         else if (inputK.includes('s')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes('w')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes('Shift')) this.game.player.setState(states.deathLeft);
-        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
+        // if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
     }
 }
 
@@ -69,7 +71,7 @@ export class RunningRight extends State {
         if (!inputK.includes('d') && !inputK.includes('w') && !inputK.includes('s')) this.game.player.setState(states.idleRight);
         if (inputK.includes('a')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes(' ')) this.game.player.setState(states.jumpingRight);
-        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
+        // if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
     }
 }
 
@@ -86,7 +88,7 @@ export class RunningLeft extends State {
         if (!inputK.includes('a') && !inputK.includes('w') && !inputK.includes('s')) this.game.player.setState(states.idleLeft);
         if (inputK.includes('d')) this.game.player.setState(states.runningRight);
         else if (inputK.includes(' ')) this.game.player.setState(states.jumpingLeft);
-        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
+        // if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
     }
 }
 
@@ -100,7 +102,7 @@ export class JumpingRight extends State {
     }
     input(inputK, inputM) {
         if (this.game.player.frameX === 11) this.game.player.setState(states.idleRight);
-        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
+        // if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackRight);
     }
 }
 
@@ -115,7 +117,7 @@ export class JumpingLeft extends State {
     }
     input(inputK, inputM) {
         if (this.game.player.frameX === 0) this.game.player.setState(states.idleLeft);
-        if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
+        // if (inputM.includes('mouseLeft')) this.game.player.setState(states.attackLeft);
     }
 }
 
@@ -159,6 +161,7 @@ export class AttackRight extends State {
         this.game.player.maxFrameX = 7;
         this.game.player.animationCount = 0;
         this.game.player.speed = 0;
+        this.game.player.setAngle = true;
     }
     input(inputK) {
         if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleRight);
@@ -176,6 +179,7 @@ export class AttackLeft extends State {
         this.game.player.maxFrameL = 7;
         this.game.player.animationCount = 0;
         this.game.player.speed = 0;
+        this.game.player.setAngle = true;
     }
     input(inputK) {
         if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleLeft);
