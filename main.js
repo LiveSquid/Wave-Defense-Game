@@ -1,7 +1,7 @@
 import { Input } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
-import { Taurus } from './enemies.js';
+import { Taurus } from './taurus.js';
 
 window.addEventListener('load', function(){
     const canvas = document.getElementById('canvas1');
@@ -30,8 +30,9 @@ window.addEventListener('load', function(){
         }
         draw(ctx, state, stateT) {
             this.background.draw(ctx);
-            this.player.draw(ctx, state);
             this.taurus.draw(ctx, stateT);
+            this.player.draw(ctx, state);
+            
         }
         rotation(a, b, w, h) {
             const dx = (a.x + w.width/2) - (b.x + (this.player.width/2));                
@@ -39,7 +40,7 @@ window.addEventListener('load', function(){
             const distance = Math.hypot(dx, dy);
             const rotateX = dx / distance;
             const rotateY = dy / distance;
-            return [rotateX, rotateY, dx, dy];
+            return [rotateX, rotateY, dx, dy, distance];
         }
     }
 

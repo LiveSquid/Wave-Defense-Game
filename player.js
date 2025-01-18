@@ -105,7 +105,7 @@ export class Player {
                 else if (this.currentState.state.includes('Left')) {
                     this.setState(1); 
                 }
-            }, 500); 
+            }, 490); 
         }
     }
     draw(ctx, state) {
