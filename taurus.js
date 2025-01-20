@@ -29,6 +29,9 @@ export class Taurus {
         this.isAttacking = false;
         this.angle = 0;
         this.animationCount = 0;
+        this.health = 100;
+        this.healthBarHeight = 12;
+        this.healthBarWidth = 250;
     }
     update(deltaTime) {
         this.frameInterval = 1000/ this.fps;
@@ -65,8 +68,7 @@ export class Taurus {
         this.angle = Math.atan2(this.direction[3], this.direction[2]);
         this.currentState.input(this.direction);
 
-        console.log(this.direction[4]);
-        if ((this.direction[4]) <= 1) {
+        if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1) {
             this.attack();
         }
         
@@ -80,6 +82,7 @@ export class Taurus {
     draw(ctx, state) {
         const stateName = state.state;
         const image = this[stateName];
+
         ctx.save()
         ctx.translate(this.x + (this.width/2), this.y + (this.height/2));
         if (this.currentState.state.includes('Right')) {
@@ -92,9 +95,21 @@ export class Taurus {
             ctx.drawImage(image, this.frameX * this.width, 0, this.width, this.height, -this.width/2, -this.height/2, this.width, this.height);
             ctx.restore();
         }
-        // ctx.drawImage(image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+
+        // ctx.save();
+        // ctx.translate(this.x + this.width/2, this.y + 80);
+        // ctx.rotate(this.angle);
+        // ctx.fillStyle = '#52fc03';
+        // ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
+        // ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
         // ctx.restore();
-        ctx.strokeRect(this.x + (this.width/2) - (this.widthHitbox/2), this.y + (this.height/2) - (this.heightHitbox/2), this.widthHitbox, this.heightHitbox);
+        if (this.health < 100) {
+            ctx.fillStyle = '#52fc03';
+            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
+            ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
+        }
+
+        // ctx.strokeRect(this.x + (this.width/2) - (this.widthHitbox/2), this.y + (this.height/2) - (this.heightHitbox/2), this.widthHitbox, this.heightHitbox);
     }
     setState(state) {
         this.currentState = this.states[state];
@@ -113,8 +128,11 @@ export class Taurus {
 
             setTimeout(() => {
                 this.isAttacking = false; 
-            }, 2000); 
+            }, 1650); 
             
+            if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1 && this.animationCount >= 0) {
+                this.game.player.health -= 25;
+            }
         }
     }
 }

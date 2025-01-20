@@ -36,6 +36,11 @@ export class Player {
         this.isAttacking = false;
         this.originalAngle = 0;
         this.setAngle = false;
+        this.widthHitbox = 68;
+        this.heightHitbox = 180;
+        this.health = 125;
+        this.healthBarHeight = 12;
+        this.healthBarWidth = 125;
     }
     update(inputK, deltaTime, inputM) {
         this.currentState.input(inputK, inputM);
@@ -79,6 +84,9 @@ export class Player {
         if ((this.y + this.playerHeightOffset) < 0) this.y = -this.playerHeightOffset;
         if ((this.y + this.height - this.playerHeightOffsetB) > this.game.height) this.y = this.game.height - this.height + this.playerHeightOffsetB;
 
+        if (this.health <= 0) {
+            this.game.gameOver = true;
+        }
     }
     attack() {
         if (!this.isAttacking) {
@@ -111,7 +119,15 @@ export class Player {
     draw(ctx, state) {
         const stateName = state.state;
         const image = this[stateName];
-        
+        if (this.health < 100) {
+            ctx.fillStyle = '#fc1c03';
+            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
+
+            ctx.fillStyle = '#52fc03';
+            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth - (100 - this.health), this.healthBarHeight);
+            ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
+        }
+
         if (!this.isAttacking) {
             ctx.drawImage(image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
         }   
@@ -129,6 +145,7 @@ export class Player {
                 ctx.restore();
             }
         }
+        // ctx.strokeRect(this.x + (this.width/2) - (this.widthHitbox/2) - 10, this.y + (this.height/2) - (this.heightHitbox/2) + 38, this.widthHitbox, this.heightHitbox);
     }
     setState(state) {
         this.currentState = this.states[state];
