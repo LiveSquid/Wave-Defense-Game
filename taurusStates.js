@@ -19,6 +19,7 @@ export class WalkLeft extends State {
     enter() {
         this.game.taurus.frameX = 0;
         this.game.taurus.maxFrameX = 15;
+        this.game.taurus.animationCount = 0;
     }
     input(direction) {
         if (direction[2] < 20 ) this.game.taurus.setState(states.walkRight);
@@ -33,6 +34,7 @@ export class WalkRight extends State {
         this.game.taurus.frameX = 15;
         this.game.taurus.maxFrameX = 0;
         this.game.taurus.maxFrameR = 15;
+        this.game.taurus.animationCount = 0;
     }
     input(direction) {
         if (direction[2] > 20 ) this.game.taurus.setState(states.walkLeft);

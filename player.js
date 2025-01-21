@@ -46,10 +46,10 @@ export class Player {
         this.currentState.input(inputK, inputM);
         this.frameInterval = 1000/ this.fps;
  
-        if (inputK.includes('s')) this.y += this.speed;
-        if (inputK.includes('w')) this.y -= this.speed;
-        if (inputK.includes('d')) this.x += this.speed;    
-        if (inputK.includes('a')) this.x -= this.speed;
+        if (inputK.includes('s')) this.y += this.speed * (deltaTime / 16.67);
+        if (inputK.includes('w')) this.y -= this.speed * (deltaTime / 16.67);
+        if (inputK.includes('d')) this.x += this.speed * (deltaTime / 16.67);    
+        if (inputK.includes('a')) this.x -= this.speed * (deltaTime / 16.67);
 
         if (this.currentState.state.includes('Left')) { 
             if (this.frameTimer > this.frameInterval) {
@@ -85,7 +85,8 @@ export class Player {
         if ((this.y + this.height - this.playerHeightOffsetB) > this.game.height) this.y = this.game.height - this.height + this.playerHeightOffsetB;
 
         if (this.health <= 0) {
-            this.game.gameOver = true;
+            if (this.currentState.state.includes('Right')) this.setState(6);
+            else this.setState(7);
         }
     }
     attack() {
@@ -119,12 +120,12 @@ export class Player {
     draw(ctx, state) {
         const stateName = state.state;
         const image = this[stateName];
-        if (this.health < 100) {
+        if (this.health < 125) {
             ctx.fillStyle = '#fc1c03';
             ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
 
             ctx.fillStyle = '#52fc03';
-            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth - (100 - this.health), this.healthBarHeight);
+            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth - (125 - this.health), this.healthBarHeight);
             ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
         }
 

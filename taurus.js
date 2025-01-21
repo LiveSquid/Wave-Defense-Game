@@ -64,6 +64,7 @@ export class Taurus {
             }
         }
 
+        console.log(this.animationCount);
         this.direction = this.game.rotation(this, this.game.player, this, this);
         this.angle = Math.atan2(this.direction[3], this.direction[2]);
         this.currentState.input(this.direction);
@@ -130,7 +131,8 @@ export class Taurus {
                 this.isAttacking = false; 
             }, 1650); 
             
-            if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1 && this.animationCount >= 0) {
+            if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1 && this.animationCount >= 1) {
+                console.log('hit')
                 this.game.player.health -= 25;
             }
         }
