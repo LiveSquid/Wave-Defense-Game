@@ -41,15 +41,18 @@ export class Player {
         this.health = 125;
         this.healthBarHeight = 12;
         this.healthBarWidth = 125;
+        this.widthHitboxAttack = 210;
     }
     update(inputK, deltaTime, inputM) {
         this.currentState.input(inputK, inputM);
         this.frameInterval = 1000/ this.fps;
- 
-        if (inputK.includes('s')) this.y += this.speed * (deltaTime / 16.67);
-        if (inputK.includes('w')) this.y -= this.speed * (deltaTime / 16.67);
-        if (inputK.includes('d')) this.x += this.speed * (deltaTime / 16.67);    
-        if (inputK.includes('a')) this.x -= this.speed * (deltaTime / 16.67);
+        
+        if (this.game.playerAlive) {
+            if (inputK.includes('s')) this.y += this.speed * (deltaTime / 16.67);
+            if (inputK.includes('w')) this.y -= this.speed * (deltaTime / 16.67);
+            if (inputK.includes('d')) this.x += this.speed * (deltaTime / 16.67);    
+            if (inputK.includes('a')) this.x -= this.speed * (deltaTime / 16.67);
+        }
 
         if (this.currentState.state.includes('Left')) { 
             if (this.frameTimer > this.frameInterval) {
@@ -84,10 +87,8 @@ export class Player {
         if ((this.y + this.playerHeightOffset) < 0) this.y = -this.playerHeightOffset;
         if ((this.y + this.height - this.playerHeightOffsetB) > this.game.height) this.y = this.game.height - this.height + this.playerHeightOffsetB;
 
-        if (this.health <= 0) {
-            if (this.currentState.state.includes('Right')) this.setState(6);
-            else this.setState(7);
-        }
+        if (this.health <= 0) this.death();
+
     }
     attack() {
         if (!this.isAttacking) {
@@ -104,7 +105,11 @@ export class Player {
             else {
                 this.setState(states.attackLeft); 
             }
-    
+            
+            if ((this.game.taurus.direction[4] - (this.widthHitboxAttack/2) - (this.game.taurus.widthHitbox/2)) <= 10) {
+                this.game.taurus.health -= 18;
+            }
+
             setTimeout(() => {
                 this.isAttacking = false;
                 this.angle = this.originalAngle; 
@@ -120,7 +125,7 @@ export class Player {
     draw(ctx, state) {
         const stateName = state.state;
         const image = this[stateName];
-        if (this.health < 125) {
+        if (this.health < 125 && this.health > 0) {
             ctx.fillStyle = '#fc1c03';
             ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
 
@@ -159,7 +164,14 @@ export class Player {
             const distance = Math.hypot(dx, dy);
             const rotateX = dx / distance;
             const rotateY = dy / distance;
-            return [rotateX, rotateY, dx, dy];
+            return [rotateX, rotateY, dx, dy, distance];
+        }
+    }
+    death() {
+        if (this.game.playerAlive) {
+            this.game.playerAlive = false;
+            if (this.currentState.state.includes('Right')) this.setState(6);
+            else this.setState(7);
         }
     }
 }

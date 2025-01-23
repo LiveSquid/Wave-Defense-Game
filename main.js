@@ -23,14 +23,16 @@ window.addEventListener('load', function(){
             this.taurus.currentState = this.taurus.states[0];
             this.taurus.currentState.enter();
             this.gameOver = false;
+            this.playerAlive = true;
+            this.taurusAlive = true;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
-            this.taurus.update(deltaTime);
+            if (this.playerAlive) this.taurus.update(deltaTime);
         }
         draw(ctx, state, stateT) {
             this.background.draw(ctx);
-            this.taurus.draw(ctx, stateT);
+            if (this.taurusAlive) this.taurus.draw(ctx, stateT);
             this.player.draw(ctx, state);
             
         }

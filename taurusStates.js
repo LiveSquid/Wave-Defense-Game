@@ -3,6 +3,7 @@ export const states = {
     walkRight: 1,
     attackLeftT1: 2,
     attackRightT1: 3,
+    deathLeftT1: 4,
 }
 
 class State  {
@@ -50,7 +51,6 @@ export class AttackLeft extends State {
         this.game.taurus.frameX = 0;
         this.game.taurus.maxFrameX = 12;
         this.game.taurus.animationCount = 0;
-        
     }
     input(direction) {
         if (this.game.taurus.animationCount >= 1) this.game.taurus.setState(states.walkLeft);
@@ -69,6 +69,21 @@ export class AttackRight extends State {
         this.game.taurus.animationCount = 0;
     }
     input(direction) {
-         if (this.game.taurus.animationCount >= 1) this.game.taurus.setState(states.walkRight);
+        if (this.game.taurus.animationCount >= 1) this.game.taurus.setState(states.walkRight);
+    }
+}
+
+export class DeathLeft extends State {
+    constructor(game) {
+        super('deathLeftT1', game);
+    }
+    enter() {
+        this.game.taurus.fps = 20
+        this.game.taurus.frameX = 0;
+        this.game.taurus.maxFrameX = 17;
+        this.game.taurus.animationCount = 0;
+    }
+    input(direction) {
+        if (this.game.taurus.animationCount >= 1) this.game.taurusAlive = false;
     }
 }

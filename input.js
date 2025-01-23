@@ -41,7 +41,7 @@ export class Input {
         });
         
         window.addEventListener('mouseup', (e) => {
-            if (e.button === 0) {
+            if (e.button === 0 && this.game.playerAlive) {
                 this.game.player.attack();
                 this.clicks.splice(this.clicks.indexOf('mouseLeft'), 1);
             } else if (e.button === 2) {

@@ -121,6 +121,7 @@ export class DeathRight extends State {
         super('deathRight', game);
     }
     enter() {
+        this.game.playerAlive = false;
         this.game.player.fps = 7;
         this.game.player.frameX = 0;
         this.game.player.maxFrameX = 17;
@@ -136,6 +137,7 @@ export class DeathLeft extends State {
         super('deathLeft', game);
     }
     enter() {
+        this.game.playerAlive = false;
         this.game.player.fps = 7;
         this.game.player.frameX = 17;
         this.game.player.maxFrameX = 0;

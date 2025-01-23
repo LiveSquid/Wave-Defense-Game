@@ -1,4 +1,4 @@
-import { WalkLeft, WalkRight, AttackLeft, AttackRight} from './taurusStates.js';
+import { WalkLeft, WalkRight, AttackLeft, AttackRight, DeathLeft} from './taurusStates.js';
 
 export class Taurus {
     constructor(game) {
@@ -22,16 +22,18 @@ export class Taurus {
         this.walkRight = walkRight;
         this.attackLeftT1 = attackLeftT1;
         this.attackRightT1 = attackRightT1;
-        this.states = [new WalkLeft(this.game), new WalkRight(this.game), new AttackLeft(this.game), new AttackRight(this.game)]
+        this.deathLeftT1 = deathLeftT1;
+        this.states = [new WalkLeft(this.game), new WalkRight(this.game), new AttackLeft(this.game), new AttackRight(this.game), new DeathLeft(this.game)]
         this.currentState = null;
         this.widthHitbox = 510;
         this.heightHitbox = 450;
         this.isAttacking = false;
         this.angle = 0;
         this.animationCount = 0;
-        this.health = 100;
+        this.health = 250;
         this.healthBarHeight = 12;
         this.healthBarWidth = 250;
+        this.alive = true;
     }
     update(deltaTime) {
         this.frameInterval = 1000/ this.fps;
@@ -64,7 +66,7 @@ export class Taurus {
             }
         }
 
-        console.log(this.animationCount);
+       
         this.direction = this.game.rotation(this, this.game.player, this, this);
         this.angle = Math.atan2(this.direction[3], this.direction[2]);
         this.currentState.input(this.direction);
@@ -79,6 +81,8 @@ export class Taurus {
             this.x -= this.speedX;
             this.y -= this.speedY;
         }
+
+        if (this.health <= 0) this.death();
     }
     draw(ctx, state) {
         const stateName = state.state;
@@ -104,9 +108,11 @@ export class Taurus {
         // ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
         // ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
         // ctx.restore();
-        if (this.health < 100) {
-            ctx.fillStyle = '#52fc03';
+        if (this.health < 250 && this.health > 0) {
+            ctx.fillStyle = '#fc1c03';
             ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
+            ctx.fillStyle = '#52fc03';
+            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth - (250 - this.health), this.healthBarHeight);
             ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
         }
 
@@ -119,7 +125,7 @@ export class Taurus {
     attack() {
         if(!this.isAttacking) {
             this.isAttacking = true;
-           
+
             if (this.currentState.state.includes('Right')) {
                 this.setState(3); 
             }
@@ -129,12 +135,16 @@ export class Taurus {
 
             setTimeout(() => {
                 this.isAttacking = false; 
+                if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 10) {
+                    this.game.player.health -= 25;
+                }
             }, 1650); 
-            
-            if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1 && this.animationCount >= 1) {
-                console.log('hit')
-                this.game.player.health -= 25;
-            }
+        }
+    }
+    death() {
+        if (this.alive) {
+            this.alive = false;
+            if (this.currentState.state.includes('Left')) this.setState(4);
         }
     }
 }
