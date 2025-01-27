@@ -12,7 +12,7 @@ export class Taurus {
         this.frameX = 0;
         this.maxFrameX = 15;
         this.maxFrameR = 15;
-        this.speedMultiplier = 0.3;
+        this.speedMultiplier = 1;
         this.fps = 20;
         this.frameInterval = 1000/ this.fps;
         this.frameTimer = 0; 
@@ -23,7 +23,7 @@ export class Taurus {
         this.attackLeftT1 = attackLeftT1;
         this.attackRightT1 = attackRightT1;
         this.deathLeftT1 = deathLeftT1;
-        this.states = [new WalkLeft(this.game), new WalkRight(this.game), new AttackLeft(this.game), new AttackRight(this.game), new DeathLeft(this.game)]
+        this.states = [new WalkLeft(this), new WalkRight(this), new AttackLeft(this), new AttackRight(this), new DeathLeft(this)]
         this.currentState = null;
         this.widthHitbox = 510;
         this.heightHitbox = 450;
@@ -34,10 +34,11 @@ export class Taurus {
         this.healthBarHeight = 12;
         this.healthBarWidth = 250;
         this.alive = true;
+        this.taurusAlive = true;
     }
     update(deltaTime) {
         this.frameInterval = 1000/ this.fps;
-
+    
         if (this.currentState.state.includes('Right')) { 
             if (this.frameTimer > this.frameInterval) {
                 if (this.frameX > this.maxFrameX) this.frameX --;
@@ -101,13 +102,6 @@ export class Taurus {
             ctx.restore();
         }
 
-        // ctx.save();
-        // ctx.translate(this.x + this.width/2, this.y + 80);
-        // ctx.rotate(this.angle);
-        // ctx.fillStyle = '#52fc03';
-        // ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
-        // ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);
-        // ctx.restore();
         if (this.health < 250 && this.health > 0) {
             ctx.fillStyle = '#fc1c03';
             ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + 80, this.healthBarWidth, this.healthBarHeight);

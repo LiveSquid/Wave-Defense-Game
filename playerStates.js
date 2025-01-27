@@ -25,8 +25,8 @@ export class IdleRight extends State {
     }
     enter() {
         this.game.player.frameX = 0;
+        this.game.player.speed = 5;
         this.game.player.maxFrameX = 11;
-        this.game.player.speed = 1.5;
         this.game.player.setAngle = false;
     }
     input(inputK, inputM) {
@@ -43,10 +43,10 @@ export class IdleLeft extends State {
         super('idleLeft', game);
     }
     enter() {
+        this.game.player.speed = 5;
         this.game.player.frameX = 11;
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 11;
-        this.game.player.speed = 1.5;
         this.game.player.setAngle = false;
     }
     input(inputK, inputM) {

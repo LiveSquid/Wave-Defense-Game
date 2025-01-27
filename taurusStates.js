@@ -7,83 +7,83 @@ export const states = {
 }
 
 class State  {
-    constructor(state, game) {
+    constructor(state, taurus) {
         this.state = state;
-        this.game = game;
+        this.taurus = taurus;
     }
 }
 
 export class WalkLeft extends State {
-    constructor(game) {
-        super('walkLeft', game);
+    constructor(taurus) {
+        super('walkLeft', taurus);
     }
     enter() {
-        this.game.taurus.frameX = 0;
-        this.game.taurus.maxFrameX = 15;
-        this.game.taurus.animationCount = 0;
+        this.taurus.frameX = 0;
+        this.taurus.maxFrameX = 15;
+        this.taurus.animationCount = 0;
     }
     input(direction) {
-        if (direction[2] < 20 ) this.game.taurus.setState(states.walkRight);
+        if (direction[2] < 20 ) this.taurus.setState(states.walkRight);
     }
 }
 
 export class WalkRight extends State {
-    constructor(game) {
-        super('walkRight', game);
+    constructor(taurus) {
+        super('walkRight', taurus);
     }
     enter() {
-        this.game.taurus.frameX = 15;
-        this.game.taurus.maxFrameX = 0;
-        this.game.taurus.maxFrameR = 15;
-        this.game.taurus.animationCount = 0;
+        this.taurus.frameX = 15;
+        this.taurus.maxFrameX = 0;
+        this.taurus.maxFrameR = 15;
+        this.taurus.animationCount = 0;
     }
     input(direction) {
-        if (direction[2] > 20 ) this.game.taurus.setState(states.walkLeft);
+        if (direction[2] > 20 ) this.taurus.setState(states.walkLeft);
     }
 }
 
 export class AttackLeft extends State {
-    constructor(game) {
-        super('attackLeftT1', game);
+    constructor(taurus) {
+        super('attackLeftT1', taurus);
     }
     enter() {
-        this.game.taurus.fps = 10
-        this.game.taurus.frameX = 0;
-        this.game.taurus.maxFrameX = 12;
-        this.game.taurus.animationCount = 0;
+        this.taurus.fps = 10
+        this.taurus.frameX = 0;
+        this.taurus.maxFrameX = 12;
+        this.taurus.animationCount = 0;
     }
     input(direction) {
-        if (this.game.taurus.animationCount >= 1) this.game.taurus.setState(states.walkLeft);
+        if (this.taurus.animationCount >= 1) this.taurus.setState(states.walkLeft);
     }
     
 }
 
 export class AttackRight extends State {
-    constructor(game) {
-        super('attackRightT1', game);
+    constructor(taurus) {
+        super('attackRightT1', taurus);
     }
     enter() {
-        this.game.taurus.frameX = 12;
-        this.game.taurus.maxFrameX = 0;
-        this.game.taurus.maxFrameR = 12;
-        this.game.taurus.animationCount = 0;
+        this.taurus.frameX = 12;
+        this.taurus.maxFrameX = 0;
+        this.taurus.maxFrameR = 12;
+        this.taurus.animationCount = 0;
     }
     input(direction) {
-        if (this.game.taurus.animationCount >= 1) this.game.taurus.setState(states.walkRight);
+        if (this.taurus.animationCount >= 1) this.taurus.setState(states.walkRight);
     }
 }
 
 export class DeathLeft extends State {
-    constructor(game) {
-        super('deathLeftT1', game);
+    constructor(taurus) {
+        super('deathLeftT1', taurus);
     }
     enter() {
-        this.game.taurus.fps = 20
-        this.game.taurus.frameX = 0;
-        this.game.taurus.maxFrameX = 17;
-        this.game.taurus.animationCount = 0;
+        this.taurus.fps = 10
+        this.taurus.frameX = 0;
+        this.taurus.maxFrameX = 17;
+        this.taurus.animationCount = 0;
     }
     input(direction) {
-        if (this.game.taurus.animationCount >= 1) this.game.taurusAlive = false;
+        if (this.taurus.animationCount >= 1) this.taurus.taurusAlive = false;
     }
 }

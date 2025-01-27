@@ -29,7 +29,7 @@ export class Player {
         this.frameInterval = 1000/ this.fps;
         this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game), new AttackRight(this.game), new AttackLeft(this.game)];
         this.currentState = null;
-        this.speed = 2.5;
+        this.speed = 5;
         this.animationCount = 0;
         this.rotate;
         this.angle = 0;
@@ -106,9 +106,17 @@ export class Player {
                 this.setState(states.attackLeft); 
             }
             
-            if ((this.game.taurus.direction[4] - (this.widthHitboxAttack/2) - (this.game.taurus.widthHitbox/2)) <= 10) {
-                this.game.taurus.health -= 18;
-            }
+            // if ((this.game.taurus.direction[4] - (this.widthHitboxAttack/2) - (this.game.taurus.widthHitbox/2)) <= 10) {
+            //     this.game.taurus.health -= 18;
+            // }
+
+            this.game.enemies.forEach(enemy => {
+                //const rotation = this.rotation(enemy, this);
+                if ((enemy.direction[4] - (this.widthHitboxAttack / 2 + enemy.widthHitbox / 2)) <=10) {
+                    enemy.health -= 18;
+                    if (enemy.health <= 0) enemy.death();
+                }
+            });
 
             setTimeout(() => {
                 this.isAttacking = false;
