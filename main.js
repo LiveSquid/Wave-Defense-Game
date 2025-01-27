@@ -2,9 +2,14 @@ import { Input } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
 import { Taurus } from './taurus.js';
+import { Menu, Running, Paused } from './gameStates.js'
+import { states } from './gameStates.js';
 
-window.addEventListener('load', function(){
-    const canvas = document.getElementById('canvas1');
+export const startButton = document.getElementById('startButton');
+export const restartButton = document.getElementById('restartButton');
+
+// window.addEventListener('load', function(){
+    export const canvas = document.getElementById('canvas1');
     const ctx = canvas.getContext('2d');
     canvas.width = 1500;
     canvas.height = 800;
@@ -14,6 +19,8 @@ window.addEventListener('load', function(){
             this.canvas = canvas;
             this.width = width;
             this.height = height;
+            this.states = [new Menu(this), new Running(this), new Paused(this)];
+            this.currentState = null;
             this.player = new Player(this); 
             this.input = new Input(this);
             this.background = new Background(this);
@@ -22,8 +29,11 @@ window.addEventListener('load', function(){
             this.gameOver = false;
             this.playerAlive = true;
             this.enemies = [];
-            this.enemyTimer = 16000;
+            this.enemyTimer = 15100;
             this.enemyInterval = 15000;
+            this.start = false;
+            this.gameRunning = false;
+            this.animationFrameId = null;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
@@ -39,7 +49,9 @@ window.addEventListener('load', function(){
             if (this.playerAlive) {
                 this.enemies.forEach(enemy => {
                     enemy.update(deltaTime);
-                    // console.log(enemy.currentState);
+                    if (enemy.health <= 0) {
+                        enemy.death();
+                    }
                 });
             }
             this.enemies = this.enemies.filter(enemy => enemy.taurusAlive);
@@ -88,20 +100,39 @@ window.addEventListener('load', function(){
             const rotateY = dy / distance;
             return [rotateX, rotateY, dx, dy, distance];
         }
+        setState(state) {
+            this.currentState = this.states[state];
+            this.currentState.enter();
+        }
     }
 
     const game = new Game(canvas.width, canvas.height);
+    game.setState(0);
 
     let lastTime = 0
-    function animate(timeStamp) {
+    export function animate(timeStamp) {
+        if (!game.gameRunning) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         const deltaTime = timeStamp - lastTime;
         lastTime = timeStamp;
         game.update(deltaTime);
         game.draw(ctx, game.player.currentState);
-        if (!game.gameOver) requestAnimationFrame(animate);
+        if (!game.gameOver) {
+            game.animationFrameId = requestAnimationFrame(animate);
+        }
     }
-    animate(0);
-});
+    startButton.addEventListener('click', () => {
+        if (game.gameRunning) {
+            game.setState(2);
+        } else {
+            game.setState(1)
+        }
+    });
+
+    restartButton.addEventListener('click', () => {
+        location.reload();
+    });
+
+// });
 
 //

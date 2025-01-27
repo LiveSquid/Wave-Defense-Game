@@ -42,6 +42,7 @@ export class Player {
         this.healthBarHeight = 12;
         this.healthBarWidth = 125;
         this.widthHitboxAttack = 210;
+        this.damage = 18;
     }
     update(inputK, deltaTime, inputM) {
         this.currentState.input(inputK, inputM);
@@ -113,7 +114,7 @@ export class Player {
             this.game.enemies.forEach(enemy => {
                 //const rotation = this.rotation(enemy, this);
                 if ((enemy.direction[4] - (this.widthHitboxAttack / 2 + enemy.widthHitbox / 2)) <=10) {
-                    enemy.health -= 18;
+                    enemy.health -= this.damage;
                     if (enemy.health <= 0) enemy.death();
                 }
             });

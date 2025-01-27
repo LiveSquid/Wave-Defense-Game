@@ -67,13 +67,16 @@ export class Taurus {
             }
         }
 
-       
-        this.direction = this.game.rotation(this, this.game.player, this, this);
-        this.angle = Math.atan2(this.direction[3], this.direction[2]);
+        if (!this.currentState.state.includes('death')) { 
+            this.direction = this.game.rotation(this, this.game.player, this, this);
+            this.angle = Math.atan2(this.direction[3], this.direction[2]); 
+        }
         this.currentState.input(this.direction);
 
-        if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1) {
-            this.attack();
+        if (!this.currentState.state.includes('death')) {
+            if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 1) {
+                this.attack();
+            }
         }
         
         if (!this.isAttacking) {
@@ -83,7 +86,6 @@ export class Taurus {
             this.y -= this.speedY;
         }
 
-        if (this.health <= 0) this.death();
     }
     draw(ctx, state) {
         const stateName = state.state;
@@ -129,13 +131,14 @@ export class Taurus {
 
             setTimeout(() => {
                 this.isAttacking = false; 
-                if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 10) {
+                if ((this.direction[4] - (this.widthHitbox/2) - (this.game.player.widthHitbox/2)) <= 10 && !this.currentState.state.includes('death')) {
                     this.game.player.health -= 25;
                 }
             }, 1650); 
         }
     }
     death() {
+        // if (this.currentState.state.includes('Left')) this.setState(4);
         if (this.alive) {
             this.alive = false;
             if (this.currentState.state.includes('Left')) this.setState(4);

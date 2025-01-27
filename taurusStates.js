@@ -78,12 +78,17 @@ export class DeathLeft extends State {
         super('deathLeftT1', taurus);
     }
     enter() {
+        this.taurus.speedMultiplier = 0;
+        this.speedX = 0;
         this.taurus.fps = 10
         this.taurus.frameX = 0;
         this.taurus.maxFrameX = 17;
         this.taurus.animationCount = 0;
     }
     input(direction) {
-        if (this.taurus.animationCount >= 1) this.taurus.taurusAlive = false;
+        if (this.taurus.animationCount >= 1) {
+            this.taurus.taurusAlive = false;
+            this.taurus.alive = true;
+        }
     }
 }
