@@ -4,6 +4,7 @@ export const states = {
     attackLeftT1: 2,
     attackRightT1: 3,
     deathLeftT1: 4,
+    deathRightT1: 5,
 }
 
 class State  {
@@ -87,6 +88,29 @@ export class DeathLeft extends State {
     }
     input(direction) {
         if (this.taurus.animationCount >= 1) {
+            this.taurus.game.UI.gold += Math.floor(Math.random() * 8 + 7);
+            this.taurus.taurusAlive = false;
+            this.taurus.alive = true;
+        }
+    }
+}
+
+export class DeathRight extends State {
+    constructor(taurus) {
+        super('deathRightT1', taurus);
+    }
+    enter() {
+        this.taurus.speedMultiplier = 0;
+        this.speedX = 0;
+        this.taurus.fps = 10
+        this.taurus.frameX = 17;
+        this.taurus.maxFrameX = 0;
+        this.taurus.maxFrameR = 17;
+        this.taurus.animationCount = 0;
+    }
+    input(direction) {
+        if (this.taurus.animationCount >= 1) {
+            this.taurus.game.UI.gold += Math.floor(Math.random() * 8 + 7);
             this.taurus.taurusAlive = false;
             this.taurus.alive = true;
         }

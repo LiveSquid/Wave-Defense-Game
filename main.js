@@ -2,8 +2,9 @@ import { Input } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
 import { Taurus } from './taurus.js';
-import { Menu, Running, Paused, GameOver } from './gameStates.js'
+import { Menu, Running, Paused, GameOver, Shop } from './gameStates.js'
 import { states } from './gameStates.js';
+import { UI } from './UI.js';
 
 export const startButton = document.getElementById('startButton');
 export const restartButton = document.getElementById('restartButton');
@@ -20,11 +21,12 @@ export const restartButton = document.getElementById('restartButton');
             this.canvas = canvas;
             this.width = width;
             this.height = height;
-            this.states = [new Menu(this), new Running(this), new Paused(this), new GameOver(this)];
+            this.states = [new Menu(this), new Running(this), new Paused(this), new GameOver(this), new Shop(this)];
             this.currentState = null;
             this.player = new Player(this); 
             this.input = new Input(this);
             this.background = new Background(this);
+            this.UI = new UI(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
             this.gameOver = false;
@@ -34,6 +36,7 @@ export const restartButton = document.getElementById('restartButton');
             this.enemyInterval = 15000;
             this.gameRunning = false;
             this.animationFrameId = null;
+            this.animationShop = null;
             this.wave = 1;
         }
         update(deltaTime) {
@@ -56,6 +59,8 @@ export const restartButton = document.getElementById('restartButton');
                 });
             }
             this.enemies = this.enemies.filter(enemy => enemy.taurusAlive);
+
+            
         }
         draw(ctx, state) {
             this.background.draw(ctx);
@@ -67,6 +72,7 @@ export const restartButton = document.getElementById('restartButton');
             }
 
             this.player.draw(ctx, state);
+            this.UI.draw(ctx);
         }
         addEnemy() {
             let x, y;
@@ -135,6 +141,14 @@ export const restartButton = document.getElementById('restartButton');
     restartButton.addEventListener('click', () => {
         location.reload();
     });
+
+    export function shopAnimation() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        game.background.draw(ctx);
+        game.UI.draw(ctx);
+        game.UI.shop(ctx);
+        game.animationShop = requestAnimationFrame(shopAnimation);
+    }   
 
 // });
 

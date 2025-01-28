@@ -1,4 +1,4 @@
-import { WalkLeft, WalkRight, AttackLeft, AttackRight, DeathLeft} from './taurusStates.js';
+import { WalkLeft, WalkRight, AttackLeft, AttackRight, DeathLeft, DeathRight} from './taurusStates.js';
 
 export class Taurus {
     constructor(game) {
@@ -23,7 +23,8 @@ export class Taurus {
         this.attackLeftT1 = attackLeftT1;
         this.attackRightT1 = attackRightT1;
         this.deathLeftT1 = deathLeftT1;
-        this.states = [new WalkLeft(this), new WalkRight(this), new AttackLeft(this), new AttackRight(this), new DeathLeft(this)]
+        this.deathRightT1 = deathRightT1;
+        this.states = [new WalkLeft(this), new WalkRight(this), new AttackLeft(this), new AttackRight(this), new DeathLeft(this), new DeathRight(this)]
         this.currentState = null;
         this.widthHitbox = 510;
         this.heightHitbox = 450;
@@ -142,6 +143,7 @@ export class Taurus {
         if (this.alive) {
             this.alive = false;
             if (this.currentState.state.includes('Left')) this.setState(4);
+            else this.setState(5);
         }
     }
 }

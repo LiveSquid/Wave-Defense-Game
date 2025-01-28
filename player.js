@@ -1,4 +1,4 @@
-import {IdleRight, IdleLeft, RunningRight, RunningLeft, JumpingRight, JumpingLeft, DeathRight, DeathLeft, AttackRight, AttackLeft} from "./playerStates.js";
+import {IdleRight, IdleLeft, RunningRight, RunningLeft, JumpingRight, JumpingLeft, DeathRight, DeathLeft, AttackRight, AttackLeft, ComboRight, ComboLeft, DrawRight, DrawLeft} from "./playerStates.js";
 import {states} from './playerStates.js';
 
 export class Player {
@@ -21,15 +21,20 @@ export class Player {
         this.deathLeft = deathLeft;
         this.attackRight = attackRight;
         this.attackLeft = attackLeft;
+        this.comboRight = comboRight;
+        this.comboLeft = comboLeft;
+        this.drawRight = drawRight;
+        this.drawLeft = drawLeft; 
         this.frameX = 0;
         this.maxFrameX = 11;
         this.maxFrameL = 11;
         this.fps = 20;
         this.frameTimer = 0;
         this.frameInterval = 1000/ this.fps;
-        this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game), new AttackRight(this.game), new AttackLeft(this.game)];
+        this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game), new AttackRight(this.game), new AttackLeft(this.game), new ComboRight(this.game), new ComboLeft(this.game), new DrawRight(this.game), new DrawLeft(this.game)];
         this.currentState = null;
-        this.speed = 5;
+        this.speed = 3.5;
+        this.maxSpeed = 3.5;
         this.animationCount = 0;
         this.rotate;
         this.angle = 0;
@@ -38,13 +43,13 @@ export class Player {
         this.setAngle = false;
         this.widthHitbox = 68;
         this.heightHitbox = 180;
-        this.health = 125;
-        this.healthBarHeight = 12;
-        this.healthBarWidth = 125;
+        this.maxHealth = 100;
+        this.health = 100;
         this.widthHitboxAttack = 210;
+        this.widthHitboxCombo = 310;
         this.damage = 18;
+        this.comboDamage = 50;
         this.kills = 0;
-        this.money = 0;
     }
     update(inputK, deltaTime, inputM) {
         this.currentState.input(inputK, inputM);
@@ -109,15 +114,18 @@ export class Player {
                 this.setState(states.attackLeft); 
             }
             
-            // if ((this.game.taurus.direction[4] - (this.widthHitboxAttack/2) - (this.game.taurus.widthHitbox/2)) <= 10) {
-            //     this.game.taurus.health -= 18;
-            // }
-
             this.game.enemies.forEach(enemy => {
-                //const rotation = this.rotation(enemy, this);
-                if ((enemy.direction[4] - (this.widthHitboxAttack / 2 + enemy.widthHitbox / 2)) <=10) {
-                    enemy.health -= this.damage;
-                    if (enemy.health <= 0) enemy.death();
+                if (this.currentState.state.includes('Left') && enemy.currentState.state.includes('Right')) {
+                    if ((enemy.direction[4] - ((this.widthHitboxAttack / 2) + (enemy.widthHitbox / 2))) <= 10) {
+                        enemy.health -= this.damage;
+                        if (enemy.health <= 0) enemy.death();
+                    }
+                }
+                else if (this.currentState.state.includes('Right') && enemy.currentState.state.includes('Left')){
+                    if ((enemy.direction[4] - ((this.widthHitboxAttack / 2) + (enemy.widthHitbox / 2))) <= 10) {
+                        enemy.health -= this.damage;
+                        if (enemy.health <= 0) enemy.death();
+                    }
                 }
             });
 
@@ -133,17 +141,52 @@ export class Player {
             }, 490); 
         }
     }
+    combo() {
+        if (!this.isAttacking) {
+            this.isAttacking = true;
+
+            this.rotate = this.rotation(this.game.input.mouse, this);
+            this.angle = Math.atan2(this.rotate[3], this.rotate[2]);    
+    
+            this.originalAngle = this.angle;
+    
+            if (this.angle < 1.55 && this.angle > -1.55) {
+                this.setState(states.comboRight); 
+            }
+            else {
+                this.setState(states.comboLeft); 
+            }
+
+            this.game.enemies.forEach(enemy => {
+                if (this.currentState.state.includes('Left') && enemy.currentState.state.includes('Right')) {
+                    if ((enemy.direction[4] - ((this.widthHitboxAttack / 2) + (enemy.widthHitbox / 2))) <= 10) {
+                        enemy.health -= this.damage;
+                        if (enemy.health <= 0) enemy.death();
+                    }
+                }
+                else if (this.currentState.state.includes('Right') && enemy.currentState.state.includes('Left')){
+                    if ((enemy.direction[4] - ((this.widthHitboxCombo/ 2) + (enemy.widthHitbox / 2))) <= 10) {
+                        enemy.health -= this.comboDamage;
+                        if (enemy.health <= 0) enemy.death();
+                    }
+                }
+            });
+
+            setTimeout(() => {
+                this.isAttacking = false;
+                this.angle = this.originalAngle; 
+                if (this.currentState.state.includes('Right')) {
+                    this.setState(0); 
+                }
+                else if (this.currentState.state.includes('Left')) {
+                    this.setState(1); 
+                }
+            }, 870); 
+        }
+    }
     draw(ctx, state) {
         const stateName = state.state;
         const image = this[stateName];
-        if (this.health < 125 && this.health > 0) {
-            ctx.fillStyle = '#fc1c03';
-            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
-
-            ctx.fillStyle = '#52fc03';
-            ctx.fillRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth - (125 - this.health), this.healthBarHeight);
-            ctx.strokeRect(this.x + this.width/2 - this.healthBarWidth/2 - 7, this.y + this.playerHeightOffset - 20, this.healthBarWidth, this.healthBarHeight);
-        }
 
         if (!this.isAttacking) {
             ctx.drawImage(image, this.frameX * this.width, 0, this.width, this.height, this.x, this.y, this.width, this.height);
@@ -162,7 +205,7 @@ export class Player {
                 ctx.restore();
             }
         }
-        // ctx.strokeRect(this.x + (this.width/2) - (this.widthHitbox/2) - 10, this.y + (this.height/2) - (this.heightHitbox/2) + 38, this.widthHitbox, this.heightHitbox);
+        // ctx.strokeRect(this.x + (this.width/2) + (this.widthHitbox/2) + 10, this.y + (this.height/2) - (this.heightHitbox/2) + 38, -this.widthHitboxCombo, this.heightHitbox);
     }
     setState(state) {
         this.currentState = this.states[state];

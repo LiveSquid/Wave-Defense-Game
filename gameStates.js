@@ -1,10 +1,12 @@
-import {startButton, animate, canvas, restartButton, ctx} from './main.js';
+import {startButton, animate, canvas, restartButton, ctx, shopAnimation} from './main.js';
+import { UI } from './UI.js';
 
 export const states = {
     menu: 0,
     running: 1,
     paused: 2,
     gameOver: 3,
+    shop: 4,
 }
 
 const title = document.getElementById('title');
@@ -87,6 +89,10 @@ export class Running extends State {
             gameContainer.webkitRequestFullscreen();
         }
 
+        cancelAnimationFrame(this.game.animationShop);
+        this.game.gameRunning = true;
+        animate(0);
+
         canvas.style.width = '1500px'
         canvas.style.height = '800px'
         canvas.style.border = '5px solid black'
@@ -99,41 +105,7 @@ export class Running extends State {
 
         title.style.display = 'none'
         subTitle.style.display = 'none'
-
-        startButton.style.transition = 'none';
-        startButton.style.left = '5.2%'
-        startButton.style.top = '7.5%'
-        startButton.style.fontSize = '1.6vw';
-        startButton.style.borderColor = 'black'
-        startButton.style.color = 'black';
-        startButton.style.padding = '0.6vw'
-        startButton.style.borderRadius = '1.2vw'
-
-        restartButton.style.display = 'block';
-        restartButton.style.zIndex = '50';
-        restartButton.style.position = 'absolute';
-        restartButton.style.left = '5.2%';
-        restartButton.style.top = '14.5%';
-        restartButton.style.transform = 'translate(-50%, -50%)';
-        restartButton.style.fontSize = '1.6vw';
-        restartButton.style.color = 'black';
-        restartButton.style.fontFamily = 'Times New Roman';
-        restartButton.style.backgroundColor = 'transparent';
-        restartButton.style.borderRadius = '1.2vw'
-        restartButton.style.padding = '0.8vw'
-        restartButton.style.borderColor = 'black'
-
-    restartButton.addEventListener('mouseenter', () => {
-        restartButton.style.transform = 'translate(-50%, -50%) scale(1.1)';
-        restartButton.style.transition = '0.3s';
-    });
-    restartButton.addEventListener('mouseleave', () => {
-        restartButton.style.transform = 'translate(-50%, -50%) scale(1)';  
-    });
-
-        this.game.gameRunning = true;
-        startButton.textContent = 'Pause Game';
-        animate(0);
+        startButton.style.display = 'none'
     }
 }
 
@@ -143,10 +115,8 @@ export class Paused extends State {
     }
     enter() {
         this.game.gameRunning = false;
+        this.game.UI.drawButton(ctx, this.game.width - this.game.UI.buttonWidth - this.game.UI.offset, 0 + this.game.UI.offset, this.game.UI.buttonWidth, this.game.UI.buttonHeight, 'Play', 'white', 'black');
         cancelAnimationFrame(this.game.animationFrameId);
-
-        startButton.style.left = '5.25%'
-        startButton.textContent = 'Resume Game';
     }
 }
 
@@ -165,6 +135,7 @@ export class GameOver extends State {
         setTimeout(() => {
             startButton.style.display = 'none'
             
+            restartButton.style.display = 'block';
             restartButton.style.zIndex = '50'
             restartButton.style.position = 'absolute'
             restartButton.style.left = '50%'
@@ -180,3 +151,17 @@ export class GameOver extends State {
         }, 3000); 
     }
 }
+
+export class Shop extends State {
+    constructor(game) {
+        super('shop', game);
+    }
+    enter() {
+        this.game.gameRunning = false;
+        this.game.UI.shop(ctx);
+        cancelAnimationFrame(this.game.animationFrameId);
+    
+        shopAnimation()
+    }
+    
+}  

@@ -42,7 +42,7 @@ export class Input {
         
         window.addEventListener('mouseup', (e) => {
             if (e.button === 0 && this.game.playerAlive) {
-                this.game.player.attack();
+                this.game.UI.testForButtonOnClick();
                 this.clicks.splice(this.clicks.indexOf('mouseLeft'), 1);
             } else if (e.button === 2) {
                 this.clicks.splice(this.clicks.indexOf('mouseRight'), 1);
@@ -51,6 +51,7 @@ export class Input {
 
         window.addEventListener('contextmenu', (e) => {
             e.preventDefault();
+            this.game.player.combo();
         });
 
         window.addEventListener('mousemove', (e) => {
@@ -60,6 +61,8 @@ export class Input {
 
             this.mouse.x = (e.clientX - rect.left) * scaleX;
             this.mouse.y = (e.clientY - rect.top) * scaleY;
+
+            this.game.UI.testForButton();
         });
         
     }

@@ -9,6 +9,10 @@ export const states = {
     deathLeft: 7,
     attackRight: 8,
     attackLeft: 9,
+    comboRight: 10,
+    comboLeft: 11,
+    drawRight: 12,
+    drawLeft: 13,
 }
 
 
@@ -26,7 +30,7 @@ export class IdleRight extends State {
     enter() {
         this.game.playerAlive = true;
         this.game.player.frameX = 0;
-        this.game.player.speed = 5;
+        this.game.player.speed = this.game.player.maxSpeed;
         this.game.player.maxFrameX = 11;
         this.game.player.setAngle = false;
     }
@@ -45,7 +49,7 @@ export class IdleLeft extends State {
     }
     enter() {
         this.game.playerAlive = true;
-        this.game.player.speed = 5;
+        this.game.player.speed = this.game.player.maxSpeed;
         this.game.player.frameX = 11;
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 11;
@@ -176,6 +180,82 @@ export class AttackLeft extends State {
         this.game.player.frameX = 7;
         this.game.player.maxFrameX = 0;
         this.game.player.maxFrameL = 7;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+        this.game.player.setAngle = true;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleLeft);
+    }
+}
+
+export class ComboRight extends State {
+    constructor(game) {
+        super('comboRight', game);
+    }
+    enter() {
+        this.game.player.fps = 20;
+        this.game.player.frameX = 0;
+        this.game.player.maxFrameX = 12;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+        this.game.player.setAngle = true;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) {
+            this.game.player.x += 40;
+            this.game.player.setState(states.idleRight);
+        }
+    }
+}
+
+export class ComboLeft extends State {
+    constructor(game) {
+        super('comboLeft', game);
+    }
+    enter() {
+        this.game.player.fps = 20;
+        this.game.player.frameX =12;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 12;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+        this.game.player.setAngle = true;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) {
+            this.game.player.x -= 40;
+            this.game.player.setState(states.idleLeft);
+        }
+    }
+}
+
+export class DrawRight extends State {
+    constructor(game) {
+        super('drawRight', game);
+    }
+    enter() {
+        this.game.player.fps = 20;
+        this.game.player.frameX = 0;
+        this.game.player.maxFrameX = 5;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+        this.game.player.setAngle = true;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleRight);
+    }
+}
+
+export class DrawLeft extends State {
+    constructor(game) {
+        super('drawLeft', game);
+    }
+    enter() {
+        this.game.player.fps = 20;
+        this.game.player.frameX =5;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 5;
         this.game.player.animationCount = 0;
         this.game.player.speed = 0;
         this.game.player.setAngle = true;
