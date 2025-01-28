@@ -2,7 +2,7 @@ import { Input } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
 import { Taurus } from './taurus.js';
-import { Menu, Running, Paused } from './gameStates.js'
+import { Menu, Running, Paused, GameOver } from './gameStates.js'
 import { states } from './gameStates.js';
 
 export const startButton = document.getElementById('startButton');
@@ -19,7 +19,7 @@ export const restartButton = document.getElementById('restartButton');
             this.canvas = canvas;
             this.width = width;
             this.height = height;
-            this.states = [new Menu(this), new Running(this), new Paused(this)];
+            this.states = [new Menu(this), new Running(this), new Paused(this), new GameOver(this)];
             this.currentState = null;
             this.player = new Player(this); 
             this.input = new Input(this);
@@ -31,9 +31,9 @@ export const restartButton = document.getElementById('restartButton');
             this.enemies = [];
             this.enemyTimer = 15100;
             this.enemyInterval = 15000;
-            this.start = false;
             this.gameRunning = false;
             this.animationFrameId = null;
+            this.wave = 1;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
@@ -59,9 +59,11 @@ export const restartButton = document.getElementById('restartButton');
         draw(ctx, state) {
             this.background.draw(ctx);
 
-            this.enemies.forEach(enemy => {
-                enemy.draw(ctx, enemy.currentState);
-            }); 
+            if (!this.gameOver) {
+                this.enemies.forEach(enemy => {
+                    enemy.draw(ctx, enemy.currentState);
+                }); 
+            }
 
             this.player.draw(ctx, state);
         }
@@ -117,9 +119,9 @@ export const restartButton = document.getElementById('restartButton');
         lastTime = timeStamp;
         game.update(deltaTime);
         game.draw(ctx, game.player.currentState);
-        if (!game.gameOver) {
-            game.animationFrameId = requestAnimationFrame(animate);
-        }
+        game.animationFrameId = requestAnimationFrame(animate);
+        
+        if (game.gameOver) game.setState(3);
     }
     startButton.addEventListener('click', () => {
         if (game.gameRunning) {

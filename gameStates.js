@@ -68,9 +68,6 @@ export class Menu extends State {
             startButton.style.transform = 'translate(-50%, -50%) scale(1)';  
         });
     }
-    input() {
-    
-    }
 }
 
 export class Running extends State {
@@ -125,9 +122,6 @@ export class Running extends State {
         startButton.textContent = 'Pause Game';
         animate(0);
     }
-    input() {
-    
-    }
 }
 
 export class Paused extends State {
@@ -141,7 +135,16 @@ export class Paused extends State {
         startButton.style.left = '5.25%'
         startButton.textContent = 'Resume Game';
     }
-    input() {
-    
+}
+
+export class GameOver extends State {
+    constructor(game) {
+        super('gameOver', game);
+    }
+    enter() {
+        this.game.gameRunning = false;
+        cancelAnimationFrame(this.game.animationFrameId);
+
+        
     }
 }

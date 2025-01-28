@@ -43,6 +43,8 @@ export class Player {
         this.healthBarWidth = 125;
         this.widthHitboxAttack = 210;
         this.damage = 18;
+        this.kills = 0;
+        this.money = 0;
     }
     update(inputK, deltaTime, inputM) {
         this.currentState.input(inputK, inputM);
@@ -88,7 +90,7 @@ export class Player {
         if ((this.y + this.playerHeightOffset) < 0) this.y = -this.playerHeightOffset;
         if ((this.y + this.height - this.playerHeightOffsetB) > this.game.height) this.y = this.game.height - this.height + this.playerHeightOffsetB;
 
-        if (this.health <= 0) this.death();
+        if (this.health <= 1) this.death();
 
     }
     attack() {
@@ -178,7 +180,6 @@ export class Player {
     }
     death() {
         if (this.game.playerAlive) {
-            this.game.playerAlive = false;
             if (this.currentState.state.includes('Right')) this.setState(6);
             else this.setState(7);
         }
