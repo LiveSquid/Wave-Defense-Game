@@ -1,4 +1,4 @@
-import {startButton, animate, canvas, restartButton} from './main.js';
+import {startButton, animate, canvas, restartButton, ctx} from './main.js';
 
 export const states = {
     menu: 0,
@@ -33,19 +33,19 @@ export class Menu extends State {
         title.style.zIndex = '8';
         title.style.position = 'absolute';
         title.style.left = '50%';
-        title.style.paddingTop = '200px';
+        title.style.top = '15%';
         title.style.transform = 'translate(-50%, -50%)';
         title.style.color = 'white';
-        title.style.fontSize = '200px'
+        title.style.fontSize = '10vw'
 
         subTitle.style.display = 'block';
         subTitle.style.zIndex = '8';
         subTitle.style.position = 'absolute';
         subTitle.style.left = '50%';
-        subTitle.style.paddingTop = '450px';
+        subTitle.style.top = '26.5%';
         subTitle.style.transform = 'translate(-50%, -50%)';
         subTitle.style.color = 'white';
-        subTitle.style.fontSize = '20px'
+        subTitle.style.fontSize = '1.3vw'
 
         startButton.style.display = 'block';
         startButton.style.zIndex = '50';
@@ -53,12 +53,12 @@ export class Menu extends State {
         startButton.style.left = '50%';
         startButton.style.top = '50%';
         startButton.style.transform = 'translate(-50%, -50%)';
-        startButton.style.fontSize = '50px';
+        startButton.style.fontSize = '4vw';
         startButton.style.color = 'white';
         startButton.style.fontFamily = 'Times New Roman';
         startButton.style.backgroundColor = 'transparent';
-        startButton.style.borderRadius = '15px'
-        startButton.style.padding = '10px'
+        startButton.style.borderRadius = '1.5vw'
+        startButton.style.padding = '0.8vw'
         startButton.style.borderColor = 'white'
     
         startButton.addEventListener('mouseenter', () => {
@@ -76,6 +76,17 @@ export class Running extends State {
         super('running', game);
     }
     enter() {
+        const gameContainer = document.documentElement; // Entire page
+        if (gameContainer.requestFullscreen) {
+            gameContainer.requestFullscreen();
+        } 
+        else if (gameContainer.mozRequestFullScreen) { // Firefox
+            gameContainer.mozRequestFullScreen();
+        } 
+        else if (gameContainer.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            gameContainer.webkitRequestFullscreen();
+        }
+
         canvas.style.width = '1500px'
         canvas.style.height = '800px'
         canvas.style.border = '5px solid black'
@@ -92,10 +103,11 @@ export class Running extends State {
         startButton.style.transition = 'none';
         startButton.style.left = '5.2%'
         startButton.style.top = '7.5%'
-        startButton.style.fontSize = '27px';
+        startButton.style.fontSize = '1.6vw';
         startButton.style.borderColor = 'black'
         startButton.style.color = 'black';
-        startButton.style.padding = '8px'
+        startButton.style.padding = '0.6vw'
+        startButton.style.borderRadius = '1.2vw'
 
         restartButton.style.display = 'block';
         restartButton.style.zIndex = '50';
@@ -103,12 +115,12 @@ export class Running extends State {
         restartButton.style.left = '5.2%';
         restartButton.style.top = '14.5%';
         restartButton.style.transform = 'translate(-50%, -50%)';
-        restartButton.style.fontSize = '27px';
+        restartButton.style.fontSize = '1.6vw';
         restartButton.style.color = 'black';
         restartButton.style.fontFamily = 'Times New Roman';
         restartButton.style.backgroundColor = 'transparent';
-        restartButton.style.borderRadius = '15px'
-        restartButton.style.padding = '10px'
+        restartButton.style.borderRadius = '1.2vw'
+        restartButton.style.padding = '0.8vw'
         restartButton.style.borderColor = 'black'
 
     restartButton.addEventListener('mouseenter', () => {
@@ -158,12 +170,12 @@ export class GameOver extends State {
             restartButton.style.left = '50%'
             restartButton.style.top = '50%'
             restartButton.style.transform = 'translate(-50%, -50%)'
-            restartButton.style.fontSize = '50px'
+            restartButton.style.fontSize = '4vw'
             restartButton.style.color = 'white'
             restartButton.style.fontFamily = 'Times New Roman'
             restartButton.style.backgroundColor = 'transparent'
-            restartButton.style.borderRadius = '15px'
-            restartButton.style.padding = '10px'
+            restartButton.style.borderRadius = '1.5vw'
+            restartButton.style.padding = '0.8vw'
             restartButton.style.borderColor = 'white'
         }, 3000); 
     }

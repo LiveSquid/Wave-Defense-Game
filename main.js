@@ -10,9 +10,10 @@ export const restartButton = document.getElementById('restartButton');
 
 // window.addEventListener('load', function(){
     export const canvas = document.getElementById('canvas1');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 1500;
+    export const ctx = canvas.getContext('2d');
     canvas.height = 800;
+    canvas.width = canvas.height * 1.875;
+    
 
     class Game {
         constructor(width, height) {
