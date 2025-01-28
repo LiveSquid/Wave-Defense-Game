@@ -141,12 +141,12 @@ export class DeathLeft extends State {
     enter() {
         this.game.playerAlive = false;
         this.game.player.fps = 7;
-        this.game.player.frameX = 13;
-        this.game.player.maxFrameX = 0;
-        this.game.player.maxFrameL = 13;
+        this.game.player.frameX = 17;
+        this.game.player.maxFrameX = 4;
+        this.game.player.maxFrameL = 17;
     }
     input(inputK) {
-        if (this.game.player.frameX === 0) this.game.gameOver = true;
+        if (this.game.player.frameX === 4) this.game.gameOver = true;
     }
 }
 

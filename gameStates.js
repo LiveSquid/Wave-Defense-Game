@@ -9,6 +9,7 @@ export const states = {
 
 const title = document.getElementById('title');
 const subTitle = document.getElementById('subTitle');
+const fadeOverlay = document.getElementById('fade-overlay');
 
 class State  {
     constructor(state, game) {
@@ -145,6 +146,25 @@ export class GameOver extends State {
         this.game.gameRunning = false;
         cancelAnimationFrame(this.game.animationFrameId);
 
+        fadeOverlay.style.zIndex = '49'
+        fadeOverlay.style.transition = 'opacity 5s ease'
+        fadeOverlay.style.opacity = 0.6;
         
+        setTimeout(() => {
+            startButton.style.display = 'none'
+            
+            restartButton.style.zIndex = '50'
+            restartButton.style.position = 'absolute'
+            restartButton.style.left = '50%'
+            restartButton.style.top = '50%'
+            restartButton.style.transform = 'translate(-50%, -50%)'
+            restartButton.style.fontSize = '50px'
+            restartButton.style.color = 'white'
+            restartButton.style.fontFamily = 'Times New Roman'
+            restartButton.style.backgroundColor = 'transparent'
+            restartButton.style.borderRadius = '15px'
+            restartButton.style.padding = '10px'
+            restartButton.style.borderColor = 'white'
+        }, 3000); 
     }
 }
