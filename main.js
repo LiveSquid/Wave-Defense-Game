@@ -6,8 +6,19 @@ import { Menu, Running, Paused, GameOver, Shop } from './gameStates.js'
 import { states } from './gameStates.js';
 import { UI } from './UI.js';
 
-export const startButton = document.getElementById('startButton');
+export const easy = document.getElementById('easy');
+export const medium = document.getElementById('medium');
+export const hard = document.getElementById('hard');
 export const restartButton = document.getElementById('restartButton');
+
+const waves = {
+    wave1: [3, 15000],
+    wave2: [5, 10000],
+    wave3: [10, 9000],
+    wave4: [13, 6000],
+    wave5: [18, 6000],
+}
+
 
 // window.addEventListener('load', function(){
     export const canvas = document.getElementById('canvas1');
@@ -29,25 +40,39 @@ export const restartButton = document.getElementById('restartButton');
             this.UI = new UI(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
+            this.wave = 1
             this.gameOver = false;
             this.playerAlive = true;
             this.enemies = [];
-            this.enemyTimer = 15100;
-            this.enemyInterval = 15000;
+            this.enemyInterval = waves[`wave${this.wave}`][1];
+            this.enemyTimer = this.enemyInterval + 1;
             this.gameRunning = false;
             this.animationFrameId = null;
             this.animationShop = null;
             this.wave = 1;
+            this.numberOfEnemies = 0;
+            this.difficulty = 2;
         }
         update(deltaTime) {
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
-
-            if (this.enemyTimer > this.enemyInterval) {
-                this.addEnemy();
-                this.enemyTimer = 0;
+            console.log(Math.floor(this.difficulty));
+            if (this.numberOfEnemies < waves[`wave${this.wave}`][0]) {
+                if (this.enemyTimer > this.enemyInterval) {
+                    this.addEnemy();
+                    this.enemyTimer = 0;
+                    this.numberOfEnemies ++;
+                }
+                else {
+                    this.enemyTimer += deltaTime;
+                }
             }
             else {
-                this.enemyTimer += deltaTime;
+                if (this.enemies.length === 0) {
+                    this.wave ++;
+                    this.numberOfEnemies = 0;
+                    this.enemyTimer = 10000;
+                    this.enemyInterval = waves[`wave${this.wave}`][1];
+                }
             }
 
             if (this.playerAlive) {
@@ -130,11 +155,31 @@ export const restartButton = document.getElementById('restartButton');
         
         if (game.gameOver) game.setState(3);
     }
-    startButton.addEventListener('click', () => {
+    easy.addEventListener('click', () => {
         if (game.gameRunning) {
             game.setState(2);
         } else {
-            game.setState(1)
+            game.difficulty = 2;
+            game.setState(1);
+        }
+    });
+
+    medium.addEventListener('click', () => {
+        if (game.gameRunning) {
+            game.setState(2);
+           
+        } else {
+            game.difficulty = 1.5;
+            game.setState(1);
+        }
+    });
+
+    hard.addEventListener('click', () => {
+        if (game.gameRunning) {
+            game.setState(2);
+        } else {
+            game.difficulty = 1;
+            game.setState(1);
         }
     });
 

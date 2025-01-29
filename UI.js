@@ -4,8 +4,11 @@ const maxHealthPrices = [50, 100, 250, 800, 2000, 'Max']
 const maxHealthUpgrades = [125, 175, 250, 350, 500]
 const damagePrices = [100, 200, 500, 2000, 5000, 'Max']
 const damageUpgrades = [10, 20, 30, 40, 100]
+const rangePrices = [300, 600, 1500, 6000, 20000, 'Max']
+const rangeUpgrades = [10, 15, 20, 25, 50]
 const speedPrices = [50, 80, 200, 500, 1000, 'Max']
 const speedUpgrades = [10, 10, 20, 30, 40]
+const comboPrices = [2500,' ']
 
 
 export class UI {
@@ -19,7 +22,9 @@ export class UI {
         this.Heal = false;
         this.MaxHealth = false;
         this.DMG = false;
+        this.Range = false;
         this.Speed = false;
+        this.Combo = false;
         this.shopWidth = 1275;
         this.shopHeight = 600;
         this.bitcoin = bitcoin;
@@ -27,11 +32,13 @@ export class UI {
         this.speed = speed;
         this.healthBarHeight = 30;
         this.healthBarWidth = 750;
-        this.gold = 55500;
+        this.gold = 0;
         this.maxHealthCounter = 0;
         this.healCounter = 0;
         this.damageCounter = 0;
+        this.rangeCounter = 0;
         this.speedCounter = 0;
+        this.comboCounter = 0;
     }
 
     draw(ctx) {
@@ -103,9 +110,15 @@ export class UI {
         // Damage
         if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 268, this.buttonWidth + 60, this.buttonHeight)) this.DMG = false;
         else this.DMG = true;
+        // Range
+        if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 338, this.buttonWidth + 60, this.buttonHeight)) this.Range = false;
+        else this.Range = true;
         // Speed
-        if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 338, this.buttonWidth + 60, this.buttonHeight)) this.Speed = false;
+        if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 408, this.buttonWidth + 60, this.buttonHeight)) this.Speed = false;
         else this.Speed = true;
+        // Combo
+        if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 700, 128, this.buttonWidth + 60, this.buttonHeight)) this.Combo = false;
+        else this.Combo = true;
     }
     testForButtonOnClick() {
         // Pause
@@ -158,14 +171,34 @@ export class UI {
                 }
             }
         }
-        // Speed
+        // Range
         else if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 338, this.buttonWidth + 60, this.buttonHeight)) {
+            if (this.gold >= rangePrices[this.rangeCounter]) {
+                if (this.rangeCounter <= 4) {
+                    this.game.player.widthHitboxAttack += this.game.player.widthHitboxAttack * (rangeUpgrades[this.rangeCounter] / 100);
+                    this.game.player.widthHitboxCombo += this.game.player.widthHitboxCombo * (rangeUpgrades[this.rangeCounter] / 100);
+                    this.gold -= rangePrices[this.rangeCounter];
+                    this.rangeCounter ++;
+                }
+            }
+        }
+        // Speed
+        else if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 408, this.buttonWidth + 60, this.buttonHeight)) {
             if (this.gold >= speedPrices[this.speedCounter]) {
                 if (this.speedCounter <= 4) {
                     this.game.player.maxSpeed += this.game.player.maxSpeed * (speedUpgrades[this.speedCounter] / 100);
                     this.game.player.speed = this.game.player.maxSpeed;
                     this.gold -= damagePrices[this.speedCounter];
                     this.speedCounter ++;
+                }
+            }
+        }
+        else if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 700, 128, this.buttonWidth + 60, this.buttonHeight)) {
+            if (this.gold >= comboPrices[this.comboCounter]) {
+                if (this.comboCounter === 0) {
+                    this.game.player.combo = true;
+                    this.gold -= comboPrices[this.comboCounter];
+                    this.comboCounter ++;
                 }
             }
         }
@@ -186,7 +219,7 @@ export class UI {
         ctx.fillStyle = '#07f53f'
         ctx.fillRect(152.5, 150, 40, 10)
         ctx.fillRect(167.5, 135, 10, 40)
-        this.drawButton(ctx, 200, 128, this.buttonWidth, this.buttonHeight, 'Heal', 'white', 'red')
+        this.drawButton(ctx, 200, 128, this.buttonWidth + 60, this.buttonHeight, 'Heal', 'white', 'red')
         ctx.fillStyle = '#ffcc33';
         ctx.font = '40px Serif'; 
         ctx.fillText(heal[this.healCounter], 460, 155)
@@ -206,7 +239,7 @@ export class UI {
         }
 
         // Damage
-        ctx.drawImage(this.sword, 147, 270, 50, 50);
+        ctx.drawImage(this.sword, 147, 265, 30, 60);
         this.drawButton(ctx, 200, 268, this.buttonWidth + 60, this.buttonHeight, 'DMG', 'white', '#212121')
         ctx.fillStyle = '#ffcc33';
         ctx.font = '40px Serif';
@@ -217,16 +250,51 @@ export class UI {
             ctx.fillText(`+${damageUpgrades[this.damageCounter]}%`, 385, 295)
         }
         
-        // Speed
-        ctx.drawImage(this.speed, 148.5, 340, 45, 45);
-        this.drawButton(ctx, 200, 338, this.buttonWidth + 60, this.buttonHeight, 'Speed', 'white', '#fff200')
+        // Range
+        ctx.save();
+        ctx.translate(173.5, 165);
+        ctx.rotate(Math.PI / 4);
+        ctx.translate(-173.5, -165);
+        ctx.drawImage(this.sword, 297, 280, 30, 60);
+        ctx.restore();
+        this.drawButton(ctx, 200, 338, this.buttonWidth + 60, this.buttonHeight, 'Range', 'white', '#212121')
         ctx.fillStyle = '#ffcc33';
         ctx.font = '40px Serif';
-        ctx.fillText(speedPrices[this.speedCounter], 460, 365)
+        ctx.fillText(rangePrices[this.rangeCounter], 460, 365)
+        if (this.rangeCounter <= 4 ) {
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Serif';
+            ctx.fillText(`+${rangeUpgrades[this.rangeCounter]}%`, 385, 365)
+        }
+
+        // Speed
+        ctx.drawImage(this.speed, 148.5, 410, 45, 45);
+        this.drawButton(ctx, 200, 408, this.buttonWidth + 60, this.buttonHeight, 'Speed', 'white', '#fff200')
+        ctx.fillStyle = '#ffcc33';
+        ctx.font = '40px Serif';
+        ctx.fillText(speedPrices[this.speedCounter], 460, 435)
         if (this.speedCounter <= 4 ) {
             ctx.fillStyle = 'black';
             ctx.font = '20px Serif';
-            ctx.fillText(`+${speedUpgrades[this.speedCounter]}%`, 385, 365)
+            ctx.fillText(`+${speedUpgrades[this.speedCounter]}%`, 385, 435)
         }
+
+         // Combo
+         ctx.save();
+         ctx.translate(338.5, 35);
+         ctx.rotate(Math.PI / 4);
+         ctx.translate(-338.5, -35);
+         ctx.drawImage(this.sword, 639, -142, 30, 60);
+         ctx.restore();
+         ctx.save();
+         ctx.translate(0, 0);
+         ctx.rotate(7 * (Math.PI / 4));
+         ctx.translate(-0, -0);
+         ctx.drawImage(this.sword, 350, 554, 30, 60);
+         ctx.restore();
+         this.drawButton(ctx, 700, 128, this.buttonWidth + 60, this.buttonHeight, 'Combo', 'white', '#245af0')
+         ctx.fillStyle = '#ffcc33';
+         ctx.font = '40px Serif'; 
+         ctx.fillText(comboPrices[this.comboCounter], 960, 155)
     }
 }

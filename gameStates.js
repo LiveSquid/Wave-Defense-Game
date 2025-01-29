@@ -1,4 +1,4 @@
-import {startButton, animate, canvas, restartButton, ctx, shopAnimation} from './main.js';
+import {easy, medium, hard, animate, canvas, restartButton, ctx, shopAnimation} from './main.js';
 import { UI } from './UI.js';
 
 export const states = {
@@ -49,26 +49,70 @@ export class Menu extends State {
         subTitle.style.color = 'white';
         subTitle.style.fontSize = '1.3vw'
 
-        startButton.style.display = 'block';
-        startButton.style.zIndex = '50';
-        startButton.style.position = 'absolute';
-        startButton.style.left = '50%';
-        startButton.style.top = '50%';
-        startButton.style.transform = 'translate(-50%, -50%)';
-        startButton.style.fontSize = '4vw';
-        startButton.style.color = 'white';
-        startButton.style.fontFamily = 'Times New Roman';
-        startButton.style.backgroundColor = 'transparent';
-        startButton.style.borderRadius = '1.5vw'
-        startButton.style.padding = '0.8vw'
-        startButton.style.borderColor = 'white'
+        easy.style.display = 'block';
+        easy.style.zIndex = '50';
+        easy.style.position = 'absolute';
+        easy.style.left = '25%';
+        easy.style.top = '50%';
+        easy.style.transform = 'translate(-50%, -50%)';
+        easy.style.fontSize = '4vw';
+        easy.style.color = 'yellow';
+        easy.style.fontFamily = 'Times New Roman';
+        easy.style.backgroundColor = 'transparent';
+        easy.style.borderRadius = '1.5vw'
+        easy.style.padding = '0.8vw'
+        easy.style.borderColor = 'white'
+
+        medium.style.display = 'block';
+        medium.style.zIndex = '50';
+        medium.style.position = 'absolute';
+        medium.style.left = '50%';
+        medium.style.top = '50%';
+        medium.style.transform = 'translate(-50%, -50%)';
+        medium.style.fontSize = '4vw';
+        medium.style.color = '#24f05a';
+        medium.style.fontFamily = 'Times New Roman';
+        medium.style.backgroundColor = 'transparent';
+        medium.style.borderRadius = '1.5vw'
+        medium.style.padding = '0.8vw'
+        medium.style.borderColor = 'white'
+
+        hard.style.display = 'block';
+        hard.style.zIndex = '50';
+        hard.style.position = 'absolute';
+        hard.style.left = '75%';
+        hard.style.top = '50%';
+        hard.style.transform = 'translate(-50%, -50%)';
+        hard.style.fontSize = '4vw';
+        hard.style.color = 'red';
+        hard.style.fontFamily = 'Times New Roman';
+        hard.style.backgroundColor = 'transparent';
+        hard.style.borderRadius = '1.5vw'
+        hard.style.padding = '0.8vw'
+        hard.style.borderColor = 'white'
     
-        startButton.addEventListener('mouseenter', () => {
-            startButton.style.transform = 'translate(-50%, -50%) scale(1.1)';
-            startButton.style.transition = '0.3s';
+        easy.addEventListener('mouseenter', () => {
+            easy.style.transform = 'translate(-50%, -50%) scale(1.1)';
+            easy.style.transition = '0.3s';
         });
-        startButton.addEventListener('mouseleave', () => {
-            startButton.style.transform = 'translate(-50%, -50%) scale(1)';  
+        easy.addEventListener('mouseleave', () => {
+            easy.style.transform = 'translate(-50%, -50%) scale(1)';  
+        });
+
+        medium.addEventListener('mouseenter', () => {
+            medium.style.transform = 'translate(-50%, -50%) scale(1.1)';
+            medium.style.transition = '0.3s';
+        });
+        medium.addEventListener('mouseleave', () => {
+            medium.style.transform = 'translate(-50%, -50%) scale(1)';  
+        });
+
+        hard.addEventListener('mouseenter', () => {
+            hard.style.transform = 'translate(-50%, -50%) scale(1.1)';
+            hard.style.transition = '0.3s';
+        });
+        hard.addEventListener('mouseleave', () => {
+            hard.style.transform = 'translate(-50%, -50%) scale(1)';  
         });
     }
 }
@@ -105,7 +149,9 @@ export class Running extends State {
 
         title.style.display = 'none'
         subTitle.style.display = 'none'
-        startButton.style.display = 'none'
+        easy.style.display = 'none'
+        medium.style.display = 'none'
+        hard.style.display = 'none'
     }
 }
 
@@ -133,7 +179,7 @@ export class GameOver extends State {
         fadeOverlay.style.opacity = 0.6;
         
         setTimeout(() => {
-            startButton.style.display = 'none'
+            easy.style.display = 'none'
             
             restartButton.style.display = 'block';
             restartButton.style.zIndex = '50'

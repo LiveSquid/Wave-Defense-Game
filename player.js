@@ -1,4 +1,4 @@
-import {IdleRight, IdleLeft, RunningRight, RunningLeft, JumpingRight, JumpingLeft, DeathRight, DeathLeft, AttackRight, AttackLeft, ComboRight, ComboLeft, DrawRight, DrawLeft} from "./playerStates.js";
+import {IdleRight, IdleLeft, RunningRight, RunningLeft, JumpingRight, JumpingLeft, DeathRight, DeathLeft, AttackRight, AttackLeft, ComboRight, ComboLeft, DrawRight, DrawLeft, FullComboRight, FullComboLeft} from "./playerStates.js";
 import {states} from './playerStates.js';
 
 export class Player {
@@ -25,13 +25,15 @@ export class Player {
         this.comboLeft = comboLeft;
         this.drawRight = drawRight;
         this.drawLeft = drawLeft; 
+        this.fullComboRight = fullComboRight;
+        this.fullComboLeft = fullComboLeft;
         this.frameX = 0;
         this.maxFrameX = 11;
         this.maxFrameL = 11;
         this.fps = 20;
         this.frameTimer = 0;
         this.frameInterval = 1000/ this.fps;
-        this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game), new AttackRight(this.game), new AttackLeft(this.game), new ComboRight(this.game), new ComboLeft(this.game), new DrawRight(this.game), new DrawLeft(this.game)];
+        this.states = [new IdleRight(this.game), new IdleLeft(this.game), new RunningRight(this.game), new RunningLeft(this.game), new JumpingRight(this.game), new JumpingLeft(this.game), new DeathRight(this.game), new DeathLeft(this.game), new AttackRight(this.game), new AttackLeft(this.game), new ComboRight(this.game), new ComboLeft(this.game), new DrawRight(this.game), new DrawLeft(this.game), new FullComboRight(this.game), new FullComboLeft(this.game)];
         this.currentState = null;
         this.speed = 3.5;
         this.maxSpeed = 3.5;
@@ -48,8 +50,9 @@ export class Player {
         this.widthHitboxAttack = 210;
         this.widthHitboxCombo = 310;
         this.damage = 18;
-        this.comboDamage = 50;
+        this.comboDamage = 70;
         this.kills = 0;
+        this.combo = false;
     }
     update(inputK, deltaTime, inputM) {
         this.currentState.input(inputK, inputM);
@@ -141,7 +144,7 @@ export class Player {
             }, 490); 
         }
     }
-    combo() {
+    comboAttack() {
         if (!this.isAttacking) {
             this.isAttacking = true;
 

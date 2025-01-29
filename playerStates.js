@@ -13,6 +13,8 @@ export const states = {
     comboLeft: 11,
     drawRight: 12,
     drawLeft: 13,
+    fullComboRight: 14,
+    fullComboLeft: 15,
 }
 
 
@@ -28,6 +30,8 @@ export class IdleRight extends State {
         super('idleRight', game);
     }
     enter() {
+        this.game.player.width = 900;
+        this.game.player.height = 350;
         this.game.playerAlive = true;
         this.game.player.frameX = 0;
         this.game.player.speed = this.game.player.maxSpeed;
@@ -40,6 +44,7 @@ export class IdleRight extends State {
         else if (inputK.includes('w')) this.game.player.setState(states.runningRight);
         else if (inputK.includes('s')) this.game.player.setState(states.runningRight);
         else if (inputK.includes('Shift')) this.game.player.setState(states.deathRight);
+        // else if (inputK.includes('Shift')) this.game.player.setState(states.fullComboRight);
     }
 }
 
@@ -48,6 +53,8 @@ export class IdleLeft extends State {
         super('idleLeft', game);
     }
     enter() {
+        this.game.player.width = 900;
+        this.game.player.height = 350;
         this.game.playerAlive = true;
         this.game.player.speed = this.game.player.maxSpeed;
         this.game.player.frameX = 11;
@@ -61,6 +68,7 @@ export class IdleLeft extends State {
         else if (inputK.includes('s')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes('w')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes('Shift')) this.game.player.setState(states.deathLeft);
+        // else if (inputK.includes('Shift')) this.game.player.setState(states.fullComboLeft);
     }
 }
 
@@ -262,5 +270,50 @@ export class DrawLeft extends State {
     }
     input(inputK) {
         if (this.game.player.animationCount >= 1) this.game.player.setState(states.idleLeft);
+    }
+}
+
+export class FullComboRight extends State {
+    constructor(game) {
+        super('fullComboRight', game);
+    }
+    enter() {
+        this.game.player.width = 450;
+        this.game.player.height = 175;
+        this.game.player.fps = 20;
+        this.game.player.frameX = 0;
+        this.game.player.maxFrameX = 25;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+        this.game.player.setAngle = true;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) {
+            // this.game.player.x += 40;
+            this.game.player.setState(states.idleRight);
+        }
+    }
+}
+
+export class FullComboLeft extends State {
+    constructor(game) {
+        super('fullComboLeft', game);
+    }
+    enter() {
+        this.game.player.width = 450;
+        this.game.player.height = 175;
+        this.game.player.fps = 20;
+        this.game.player.frameX =25;
+        this.game.player.maxFrameX = 0;
+        this.game.player.maxFrameL = 25;
+        this.game.player.animationCount = 0;
+        this.game.player.speed = 0;
+        this.game.player.setAngle = true;
+    }
+    input(inputK) {
+        if (this.game.player.animationCount >= 1) {
+            // this.game.player.x -= 40;
+            this.game.player.setState(states.idleLeft);
+        }
     }
 }

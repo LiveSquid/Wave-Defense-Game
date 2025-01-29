@@ -88,7 +88,7 @@ export class DeathLeft extends State {
     }
     input(direction) {
         if (this.taurus.animationCount >= 1) {
-            this.taurus.game.UI.gold += Math.floor(Math.random() * 8 + 7);
+            this.taurus.game.UI.gold += Math.floor(Math.random() * (15 * this.taurus.game.difficulty) + (10 * this.taurus.game.difficulty));
             this.taurus.taurusAlive = false;
             this.taurus.alive = true;
         }
@@ -110,7 +110,7 @@ export class DeathRight extends State {
     }
     input(direction) {
         if (this.taurus.animationCount >= 1) {
-            this.taurus.game.UI.gold += Math.floor(Math.random() * 8 + 7);
+            this.taurus.game.UI.gold += Math.floor(Math.random() * (15 * this.taurus.game.difficulty) + (10 * this.taurus.game.difficulty));
             this.taurus.taurusAlive = false;
             this.taurus.alive = true;
         }

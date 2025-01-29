@@ -51,7 +51,7 @@ export class Input {
 
         window.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            this.game.player.combo();
+            if (this.game.player.combo === true) this.game.player.comboAttack();
         });
 
         window.addEventListener('mousemove', (e) => {
