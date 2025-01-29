@@ -5,7 +5,7 @@ As the name suggests its a wave defense game where you play as a knight, fending
 If you find any bugs or have any suggestions please reach out!
 
 # Demo: 
-https://livesquid.github.io/Wave-Defense-Game/
+https://livesquid.github.io/Wave-Defense-Game/ |
 https://live-squid.itch.io/the-last-stand-knightfall
 
 # :video_game:Controls:video_game:
