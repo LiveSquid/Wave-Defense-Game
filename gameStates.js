@@ -47,7 +47,8 @@ export class Menu extends State {
         title.style.top = '15%';
         title.style.transform = 'translate(-50%, -50%)';
         title.style.color = 'white';
-        title.style.fontSize = '10vw'
+        title.style.fontSize = '8vw'
+        title.style.whiteSpace = 'nowrap'
 
         subTitle.style.display = 'block';
         subTitle.style.zIndex = '8';
