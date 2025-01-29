@@ -1,3 +1,5 @@
+import { waves } from "./main.js"
+
 // Shop Costs
 const heal = [50, 200]
 const maxHealthPrices = [50, 100, 250, 800, 2000, 'Max']
@@ -9,6 +11,8 @@ const rangeUpgrades = [10, 15, 20, 25, 50]
 const speedPrices = [50, 80, 200, 500, 1000, 'Max']
 const speedUpgrades = [10, 10, 20, 30, 40]
 const comboPrices = [2500,' ']
+const goldPrices = [300, 600, 1500, 6000, 20000, 'Max']
+const goldUpgrades = [100, 100, 200, 300, 500]
 
 
 export class UI {
@@ -25,11 +29,12 @@ export class UI {
         this.Range = false;
         this.Speed = false;
         this.Combo = false;
+        this.Gold = false;
         this.shopWidth = 1275;
         this.shopHeight = 600;
         this.bitcoin = bitcoin;
         this.sword = sword;
-        this.speed = speed;
+        this.speedI = speed;
         this.healthBarHeight = 30;
         this.healthBarWidth = 750;
         this.gold = 0;
@@ -39,14 +44,26 @@ export class UI {
         this.rangeCounter = 0;
         this.speedCounter = 0;
         this.comboCounter = 0;
+        this.goldCounter = 0;
     }
-
     draw(ctx) {
         // GOLD
         ctx.drawImage(this.bitcoin, 0, 0, 50, 50);
         ctx.fillStyle = '#ffcc33';
         ctx.font = '40px Serif'; 
         ctx.fillText( `${this.gold}`, 95, 27)
+
+        // Wave
+        ctx.fillStyle = 'black';
+        ctx.font = '40px Serif'; 
+        ctx.fillText( `Wave: ${this.game.wave}`, 755, 27)
+
+        ctx.fillStyle = '#3495eb';
+        ctx.fillRect(550, 50, this.game.waveBarWidth, this.game.wavebarHeight);
+        ctx.fillStyle = '#286da8';
+        ctx.fillRect(550, 50, this.game.waveBarWidth - this.game.waveBarRevealWidth, this.game.wavebarHeight);
+        ctx.strokeStyle = 'black';
+        ctx.strokeRect(550, 50, this.game.waveBarWidth, this.game.wavebarHeight);
 
         // Health Bar
         ctx.fillStyle = '#fc1c03';
@@ -119,6 +136,9 @@ export class UI {
         // Combo
         if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 700, 128, this.buttonWidth + 60, this.buttonHeight)) this.Combo = false;
         else this.Combo = true;
+        // Gold
+        if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 478, this.buttonWidth + 60, this.buttonHeight)) this.Gold = false;
+        else this.Gold = true;
     }
     testForButtonOnClick() {
         // Pause
@@ -188,17 +208,28 @@ export class UI {
                 if (this.speedCounter <= 4) {
                     this.game.player.maxSpeed += this.game.player.maxSpeed * (speedUpgrades[this.speedCounter] / 100);
                     this.game.player.speed = this.game.player.maxSpeed;
-                    this.gold -= damagePrices[this.speedCounter];
+                    this.gold -= speedPrices[this.speedCounter];
                     this.speedCounter ++;
                 }
             }
         }
+        // Combo
         else if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 700, 128, this.buttonWidth + 60, this.buttonHeight)) {
             if (this.gold >= comboPrices[this.comboCounter]) {
                 if (this.comboCounter === 0) {
                     this.game.player.combo = true;
                     this.gold -= comboPrices[this.comboCounter];
                     this.comboCounter ++;
+                }
+            }
+        }
+        // Gold
+        else if (this.insideButton(this.game.input.mouse.x, this.game.input.mouse.y, 200, 478, this.buttonWidth + 60, this.buttonHeight)) {
+            if (this.gold >= goldPrices[this.goldCounter]) {
+                if (this.goldCounter <= 4) {
+                    this.game.difficulty += this.game.difficulty * (goldUpgrades[this.goldCounter] / 100);
+                    this.gold -= goldPrices[this.goldCounter];
+                    this.goldCounter ++;
                 }
             }
         }
@@ -268,7 +299,7 @@ export class UI {
         }
 
         // Speed
-        ctx.drawImage(this.speed, 148.5, 410, 45, 45);
+        ctx.drawImage(this.speedI, 148.5, 410, 45, 45);
         this.drawButton(ctx, 200, 408, this.buttonWidth + 60, this.buttonHeight, 'Speed', 'white', '#fff200')
         ctx.fillStyle = '#ffcc33';
         ctx.font = '40px Serif';
@@ -296,5 +327,17 @@ export class UI {
          ctx.fillStyle = '#ffcc33';
          ctx.font = '40px Serif'; 
          ctx.fillText(comboPrices[this.comboCounter], 960, 155)
+
+        // Gold
+        ctx.drawImage(this.bitcoin, 148.5, 480, 45, 45);
+        this.drawButton(ctx, 200, 478, this.buttonWidth + 60, this.buttonHeight, 'Gold', 'white', '#ffcc33')
+        ctx.fillStyle = '#ffcc33';
+        ctx.font = '40px Serif';
+        ctx.fillText(goldPrices[this.goldCounter], 460, 505)
+        if (this.goldCounter <= 4 ) {
+            ctx.fillStyle = 'black';
+            ctx.font = '20px Serif';
+            ctx.fillText(`+${goldUpgrades[this.goldCounter]}%`, 385, 505)
+        }
     }
 }

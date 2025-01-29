@@ -11,12 +11,12 @@ export const medium = document.getElementById('medium');
 export const hard = document.getElementById('hard');
 export const restartButton = document.getElementById('restartButton');
 
-const waves = {
+export const waves = {
     wave1: [3, 15000],
     wave2: [5, 10000],
     wave3: [10, 9000],
     wave4: [13, 6000],
-    wave5: [18, 6000],
+    wave5: [18, 4000],
 }
 
 
@@ -40,7 +40,7 @@ const waves = {
             this.UI = new UI(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
-            this.wave = 1
+            this.wave = 5;
             this.gameOver = false;
             this.playerAlive = true;
             this.enemies = [];
@@ -49,13 +49,18 @@ const waves = {
             this.gameRunning = false;
             this.animationFrameId = null;
             this.animationShop = null;
-            this.wave = 1;
             this.numberOfEnemies = 0;
-            this.difficulty = 2;
+            this.difficulty = 3;
+            this.enemiesDead = 0;
+            this.waveBarWidth = 400;
+            this.wavebarHeight = 20;
+            this.waveBarRevealWidth;
         }
         update(deltaTime) {
+            console.log(this.UI.speedCounter)
+            this.waveBarRevealWidth = this.waveBarWidth - (this.waveBarWidth / (waves[`wave${this.wave}`][0] / (waves[`wave${this.wave}`][0] - this.enemiesDead)))
+        
             this.player.update(this.input.keys, deltaTime, this.input.clicks);
-            console.log(Math.floor(this.difficulty));
             if (this.numberOfEnemies < waves[`wave${this.wave}`][0]) {
                 if (this.enemyTimer > this.enemyInterval) {
                     this.addEnemy();
@@ -71,6 +76,7 @@ const waves = {
                     this.wave ++;
                     this.numberOfEnemies = 0;
                     this.enemyTimer = 10000;
+                    this.enemiesDead = 0
                     this.enemyInterval = waves[`wave${this.wave}`][1];
                 }
             }
@@ -85,7 +91,13 @@ const waves = {
             }
             this.enemies = this.enemies.filter(enemy => enemy.taurusAlive);
 
+            for (let i = 6; i <= 30; i++) {  
+                const previousWave = waves[`wave${i - 1}`];
+                const newEnemyCount = previousWave[0] * 2;
+                const newSpawnTime = Math.max(500, previousWave[1] - 500); 
             
+                waves[`wave${i}`] = [newEnemyCount, newSpawnTime];
+            }
         }
         draw(ctx, state) {
             this.background.draw(ctx);
@@ -159,7 +171,7 @@ const waves = {
         if (game.gameRunning) {
             game.setState(2);
         } else {
-            game.difficulty = 2;
+            game.difficulty = 4;
             game.setState(1);
         }
     });
@@ -169,7 +181,7 @@ const waves = {
             game.setState(2);
            
         } else {
-            game.difficulty = 1.5;
+            game.difficulty = 3;
             game.setState(1);
         }
     });
@@ -178,7 +190,7 @@ const waves = {
         if (game.gameRunning) {
             game.setState(2);
         } else {
-            game.difficulty = 1;
+            game.difficulty = 2;
             game.setState(1);
         }
     });
