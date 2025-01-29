@@ -43,7 +43,7 @@ export class IdleRight extends State {
         else if (inputK.includes('a')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes('w')) this.game.player.setState(states.runningRight);
         else if (inputK.includes('s')) this.game.player.setState(states.runningRight);
-        else if (inputK.includes('Shift')) this.game.player.setState(states.deathRight);
+        // else if (inputK.includes('Shift')) this.game.player.setState(states.deathRight);
         // else if (inputK.includes('Shift')) this.game.player.setState(states.fullComboRight);
     }
 }
@@ -67,7 +67,7 @@ export class IdleLeft extends State {
         if (inputK.includes('d')) this.game.player.setState(states.runningRight);
         else if (inputK.includes('s')) this.game.player.setState(states.runningLeft);
         else if (inputK.includes('w')) this.game.player.setState(states.runningLeft);
-        else if (inputK.includes('Shift')) this.game.player.setState(states.deathLeft);
+        // else if (inputK.includes('Shift')) this.game.player.setState(states.deathLeft);
         // else if (inputK.includes('Shift')) this.game.player.setState(states.fullComboLeft);
     }
 }
