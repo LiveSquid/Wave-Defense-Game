@@ -2,7 +2,7 @@ import { Input } from './input.js';
 import { Player } from './player.js';
 import { Background } from './background.js';
 import { Taurus } from './taurus.js';
-import { Menu, Running, Paused, GameOver, Shop } from './gameStates.js'
+import { Menu, Running, Paused, GameOver, Shop, HowTo } from './gameStates.js'
 import { states } from './gameStates.js';
 import { UI } from './UI.js';
 
@@ -10,6 +10,7 @@ export const easy = document.getElementById('easy');
 export const medium = document.getElementById('medium');
 export const hard = document.getElementById('hard');
 export const restartButton = document.getElementById('restartButton');
+export const howTo = document.getElementById('howTo');
 
 export const waves = {
     wave1: [3, 15000],
@@ -32,7 +33,7 @@ export const waves = {
             this.canvas = canvas;
             this.width = width;
             this.height = height;
-            this.states = [new Menu(this), new Running(this), new Paused(this), new GameOver(this), new Shop(this)];
+            this.states = [new Menu(this), new Running(this), new Paused(this), new GameOver(this), new Shop(this), new HowTo(this)];
             this.currentState = null;
             this.player = new Player(this); 
             this.input = new Input(this);
@@ -40,7 +41,7 @@ export const waves = {
             this.UI = new UI(this);
             this.player.currentState = this.player.states[0];
             this.player.currentState.enter();
-            this.wave = 5;
+            this.wave = 1;
             this.gameOver = false;
             this.playerAlive = true;
             this.enemies = [];
@@ -198,6 +199,10 @@ export const waves = {
     restartButton.addEventListener('click', () => {
         location.reload();
     });
+
+    howTo.addEventListener('click', () => {
+        game.setState(5);
+     });
 
     export function shopAnimation() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
